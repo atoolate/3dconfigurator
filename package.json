@@ -1,0 +1,16 @@
+{
+  "name": "build-les-22-11-raycasting",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview"
+  },
+  "dependencies": {
+    "dat.gui": "^0.7.9",
+    "gsap": "^3.12.5",
+    "node": "^20.18.1",
+    "three": "^0.170.0"
+  }
+}
+
