@@ -42,36 +42,39 @@ gltfLoader.setDRACOLoader(dracoLoader);
 let shoeModel = null;
 
 // Load GLTF/GLB model
-gltfLoader.load(
-    '/models/shoe.glb', // Make sure this path is correct relative to your server root
-    (gltf) => {
-        console.log('Model loaded successfully:', gltf);
-        shoeModel = gltf.scene;
-
-        // Change material to standard white (.map)
-        shoeModel.traverse((child) => {
-            if (child.isMesh) {
-                child.material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-                child.name = 'shoe'; // Name the shoe for identification
+gltfLoader.load('/models/shoe.glb', (gltf) => {
+    shoeModel = gltf.scene;
+    
+    shoeModel.traverse((child) => {
+        if (child.isMesh) {
+            // Check the name of the part and set the color accordingly
+            switch (child.name) {
+                case 'laces':
+                    child.material.color.set(0xff0000); // Red for laces
+                    break;
+                case 'outside_1':
+                case 'outside_2':
+                case 'outside_3':
+                    child.material.color.set(0x0000ff); // Blue for outside parts
+                    break;
+                case 'sole_bottom':
+                    child.material.color.set(0x00ff00); // Green for sole bottom
+                    break;
+                case 'sole_top':
+                    child.material.color.set(0xffff00); // Yellow for sole top
+                    break;
+                default:
+                    child.material.color.set(0xffffff); // Default white for other parts
+                    break;
             }
-        });
+        }
+    });
 
-        shoeModel.position.set(0, 0, 0); // Adjust position if needed
-        //scale 15
-        shoeModel.scale.set(15, 15, 15); // Adjust scale if needed
-
-        scene.add(shoeModel);
-
-        // Now that the model is loaded, you can safely add controls for it
-        initGUI();
-    },
-    (xhr) => {
-        console.log(`Loading model: ${(xhr.loaded / xhr.total) * 100}% loaded`);
-    },
-    (error) => {
-        console.error('An error occurred while loading the model:', error);
-    }
-);
+    scene.add(shoeModel);
+    
+    // Now that the model is loaded, we can initialize the GUI
+    initGUI();
+});
 
 // Camera setup
 camera.position.y = 12;
@@ -86,6 +89,8 @@ controls.screenSpacePanning = false;
 
 // GUI controls for shoe model
 function initGUI() {
+    if (!shoeModel) return; // Ensure shoeModel is loaded before initializing GUI
+
     const gui = new dat.GUI();
     const shoeFolder = gui.addFolder('Shoe Model');
     const shoeMaterial = { color: 0xffffff, roughness: 0.5, metalness: 0.5 };
@@ -127,12 +132,6 @@ function initGUI() {
     shoeFolder.add(shoeModel.position, 'y', -10, 10).name('Position Y');
     shoeFolder.add(shoeModel.position, 'z', -10, 10).name('Position Z');
 
-  
-
-    // Add controls to rotate the shoe
-    shoeFolder.add(shoeModel.rotation, 'x', 0, Math.PI * 2).name('Rotation X');
-    shoeFolder.add(shoeModel.rotation, 'y', 0, Math.PI * 2).name('Rotation Y');
-    shoeFolder.add(shoeModel.rotation, 'z', 0, Math.PI * 2).name('Rotation Z');
     shoeFolder.open();
 }
 
