@@ -87,9 +87,9 @@ gltfLoader.load('/models/shoe.glb', (gltf) => {
 });
 
 // Camera setup
-camera.position.y = 12;
-camera.position.z = 5;
-camera.position.x = 0;
+camera.position.y = 4;
+camera.position.z = 3;
+camera.position.x = 5;
 
 // OrbitControls setup for camera manipulation
 const controls = new OrbitControls(camera, renderer.domElement);
