@@ -1,15 +1,104 @@
 body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     margin: 0;
+    overflow: hidden; /* Prevent scrolling */
+    font-family: Arial, sans-serif;
 }
 
-header {
-    position: absolute;
-    height: 10vh;
+.configurator-container {
+    flex: 1; /* Takes up remaining space */
+    background: #f0f0f0; /* Optional background color */
 }
 
-.sneaker {
+.configurator-settings {
+    height: 100px; /* Fixed height */
+    background-color: #ddd;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4rem;
+    font-weight: bold;
     position: relative;
-    height: 70vh;
-    width: 100vw;
+    z-index: 1;
+}
 
+
+/* Top Bar */
+.top-bar {
+    background-color: #00ff00;
+    text-align: center;
+    padding: 10px 0;
+    color: black;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.currency-selector button {
+    background: black;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.icon {
+    position: relative;
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: #00ff00;
+    color: black;
+    font-size: 12px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
 }

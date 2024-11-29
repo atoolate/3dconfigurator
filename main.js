@@ -12,15 +12,23 @@ camera.position.z = 5;
 
 // Renderer setup
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+
+// Append the renderer to the container
+const container = document.getElementById('configurator-container');
+container.appendChild(renderer.domElement);
+
+// Update renderer size to fit the container
+function updateRendererSize() {
+    const { clientWidth, clientHeight } = container;
+    renderer.setSize(clientWidth, clientHeight);
+    camera.aspect = clientWidth / clientHeight;
+    camera.updateProjectionMatrix();
+}
 
 // Handle window resize
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
+window.addEventListener('resize', updateRendererSize);
+updateRendererSize(); // Initial size setup
+
 
 // Add point light
 const pointLight = new THREE.PointLight(0xffffff, 1, 100);
