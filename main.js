@@ -118,6 +118,8 @@ function initGUI() {
             });
         }
     });
+//add enviroment map
+
 
     shoeFolder.add(shoeMaterial, 'metalness', 0, 1).onChange((value) => {
         if (shoeModel) {
@@ -144,28 +146,3 @@ function animate() {
 
 // Start animation loop
 renderer.setAnimationLoop(animate);
-
-// environment map
-
-const loader = new THREE.TextureLoader();
-loader.load('path/to/your-image.jpg', (texture) => {
-    // Create a cubemap using the same texture for all faces
-    const cubeTexture = new THREE.CubeTexture([
-        texture, texture, texture, texture, texture, texture
-    ]);
-
-    scene.background = cubeTexture;
-
-    // Use as an environment map (optional)
-    const material = new THREE.MeshStandardMaterial({
-        envMap: cubeTexture,
-        metalness: 1,
-        roughness: 0
-    });
-
-    const cube = new THREE.Mesh(
-        new THREE.BoxGeometry(1, 1, 1),
-        material
-    );
-    scene.add(cube);
-});
