@@ -71,6 +71,8 @@ gltfLoader.load('/models/shoe.glb', (gltf) => {
     });
 
     scene.add(shoeModel);
+    //scale the model
+    shoeModel.scale.set(15, 15, 15);
     
     // Now that the model is loaded, we can initialize the GUI
     initGUI();
