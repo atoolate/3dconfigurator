@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>SWEAR London</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="/style.css">
 </head>
 
@@ -28,12 +29,20 @@
 
     <!-- Configurator Settings -->
     <div class="configurator-settings">
-        <div class="configurator-option">
-            <button id="color-button">Select Color</button>
-            <button id="fabric-button">Select Fabric</button>
-            <button id="randomizer-button">Randomizer</button>
+        <div class="parts-buttons">
+            <!-- Part Selector -->
+            <div class="part-selector">
+                <button id="prev-part-button"><i class="fas fa-arrow-left"></i></button>
+                <span id="part-name">SELECT PART</span>
+                <button id="next-part-button"><i class="fas fa-arrow-right"></i></button>
+            </div>
+            <!-- Configurator Options -->
+            <div class="configurator-option">
+                <button id="color-button">Select Color</button>
+                <button id="fabric-button">Select Fabric</button>
+                <button id="randomizer-button">Randomizer</button>
+            </div>
         </div>
-        
         <!-- Color Palette -->
         <div class="color-palette">
             <div class="color-item" style="background-color: #fce4ec;" data-color="#fce4ec"></div>
@@ -41,13 +50,14 @@
             <div class="color-item" style="background-color: #d50000;" data-color="#d50000"></div>
             <div class="color-item" style="background-color: #ff5722;" data-color="#ff5722"></div>
             <div class="color-item" style="background-color: #ffeb3b;" data-color="#ffeb3b"></div>
+            <div class="color-item" style="background-color: #ffffff;" data-color="#ffffff"></div>
             <div class="color-item" style="background-color: #8bc34a;" data-color="#8bc34a"></div>
             <div class="color-item" style="background-color: #009688;" data-color="#009688"></div>
             <div class="color-item" style="background-color: #03a9f4;" data-color="#03a9f4"></div>
             <div class="color-item" style="background-color: #673ab7;" data-color="#673ab7"></div>
             <div class="color-item" style="background-color: #000000;" data-color="#000000"></div>
-            <div class="color-item" style="background-color: #ffffff; border: 1px solid #000;" data-color="#ffffff"></div>
         </div>
+    </div>
 
     </div>
 

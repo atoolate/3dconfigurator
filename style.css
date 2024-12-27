@@ -94,9 +94,18 @@ h2 {
     height: 100%;
 }
 
+.parts-buttons {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-direction: column;
+    color: white;
+    font-weight: 400;
+}
+
 .configurator-settings {
-    height: auto;
-    color: black;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -108,8 +117,7 @@ h2 {
 
 .configurator-option {
     display: flex;
-    gap: 10px;
-    margin: 16px 0px;
+    gap: 16px;
 }
 
 .configurator-option button {
@@ -121,7 +129,33 @@ h2 {
     cursor: pointer;
 }
 
-.configurator-option button:hover {
+.configurator-option button:hover,
+.configurator-option button:active,
+.configurator-option button.selected {
+    background: #00ff00;
+    color: black;
+}
+
+.part-selector {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #000000;
+}
+
+.part-selector button {
+    background: none;
+    border: none;
+    background-color: #000000;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.part-selector button:hover {
     background: #00ff00;
     color: black;
 }
@@ -129,8 +163,8 @@ h2 {
 .color-palette {
     display: flex;
     flex-wrap: wrap;
-
     justify-content: center;
+    margin-top: 16px;
 }
 
 .color-item {
