@@ -4,7 +4,7 @@ body {
     height: 100vh;
     margin: 0;
     overflow: hidden; /* Prevent scrolling */
-    font-family: Helvetica, sans-serif, sans-serif;
+    font-family: Helvetica, sans-serif;
 }
 
 .configurator-container {
@@ -32,8 +32,9 @@ body {
     text-align: center;
     padding: 10px 0;
     color: black;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 0.6em;
+
+    font-weight: 400;
 }
 
 /* Navbar */
@@ -74,6 +75,7 @@ h2 {
     font-size: 14px;
     cursor: pointer;
     width: 100%;
+    min-width: 125px;
 }
 .btn{
     width: 100%;
