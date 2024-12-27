@@ -3,28 +3,10 @@ body {
     flex-direction: column;
     height: 100vh;
     margin: 0;
-    overflow: hidden; /* Prevent scrolling */
+    overflow: hidden;
+    /* Prevent scrolling */
     font-family: Helvetica, sans-serif;
 }
-
-.configurator-container {
-    flex: 1; /* Takes up remaining space */
-    background: #f0f0f0; /* Optional background color */
-}
-
-.configurator-settings {
-    height: 100px; /* Fixed height */
-    background-color: #ddd;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 4rem;
-    font-weight: bold;
-    position: relative;
-    z-index: 1;
-}
-
 
 /* Top Bar */
 .top-bar {
@@ -45,16 +27,17 @@ body {
     background-color: white;
     border-bottom: 1px solid #ddd;
 }
-h2 {
-   margin: 0;
-   letter-spacing: 0.1em;
-   font-weight: 500;
-}
 
+h2 {
+    margin: 0;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+}
 
 .logo img {
- width: 100%
+    width: 100%;
 }
+
 .logo {
     width: 10%;
 }
@@ -75,7 +58,8 @@ h2 {
     width: 100%;
     min-width: 125px;
 }
-.btn{
+
+.btn {
     width: 100%;
 }
 
@@ -104,4 +88,63 @@ h2 {
     justify-content: center;
     align-items: center;
     border-radius: 50%;
+}
+
+.configurator-container {
+    height: 100%;
+}
+
+.configurator-settings {
+    height: auto;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
+
+.configurator-option {
+    display: flex;
+    gap: 10px;
+    margin: 16px 0px;
+}
+
+.configurator-option button {
+    background: #000000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.configurator-option button:hover {
+    background: #00ff00;
+    color: black;
+}
+
+.color-palette {
+    display: flex;
+    flex-wrap: wrap;
+
+    justify-content: center;
+}
+
+.color-item {
+    width: 50px;
+    height: 50px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease, border 0.2s ease;
+}
+
+.color-item:hover {
+    transform: scale(1.2);
+}
+
+.color-item.selected {
+    border-color: black;
 }
