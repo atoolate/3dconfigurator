@@ -33,6 +33,9 @@ updateRendererSize(); // Initial size setup
 const pointLight = new THREE.PointLight(0xffffff, 1, 100);
 pointLight.position.set(1, 8, 2);
 scene.add(pointLight);
+// add ambient light
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
 
 // Add directional light
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -54,13 +57,13 @@ let currentPartIndex = 0;
 
 // Define camera positions and targets for each part
 const cameraPositions = {
-    laces: { position: { x: 6, y: 2, z: -2 }, target: { x: 0, y: 2, z: 2 } },
-    outside_1: { position: { x: 6, y: 2, z:-2 }, target: { x: 0, y: 2, z: 2 } },
-    outside_2: { position: { x: -6, y: 2, z:-2 }, target: { x: 0, y: 2, z: 2 } },
-    outside_3: { position: { x: 0, y: 2, z: -6 }, target: { x: 0, y: 2, z: 2 } },
+    sole_top: { position: { x: 6, y: 0, z: -2 }, target: { x: 0, y: 0, z: 0 } },
+    outside_1: { position: { x: 6, y: 2, z:-2 }, target: { x: 0, y: 2, z: 0} },
+    outside_2: { position: { x: -6, y: 2, z:-2 }, target: { x: 0, y: 2, z: 0 } },
+    outside_3: { position: { x: 0, y: 2, z: -6 }, target: { x: 0, y: 2, z: 0 } },
     inside: { position: { x: 0, y: 5, z: 6 }, target: { x: 0, y: 2, z: 0 } },
-    sole_bottom: { position: { x: 0, y: -8, z: 4 }, target: { x: 0, y: 0, z: -2 } },
-    sole_top: { position: { x: 0, y: 5, z: 4 }, target: { x: 0, y: 0, z: 0 } } // Adjusted z position for better view
+    sole_bottom: { position: { x: 0, y: -5, z: 3 }, target: { x: 0, y: 2, z: -1 } },
+    laces: { position: { x: 0, y: 5, z: 4 }, target: { x: 0, y: 0, z: 0 } } // Adjusted z position for better view
 };
 
 function zoomToPart(partName) {
@@ -97,19 +100,19 @@ gltfLoader.load('/models/shoe.glb', (gltf) => {
                     child.material.color.set(0x0000ff); // Blue for outside front
                     break;
                 case 'outside_2':
-                    child.material.color.set(0x0000ff); // Blue for outside back
+                    child.material.color.set(0xffa500); // Orange for outside back
                     break;
                 case 'outside_3':
-                    child.material.color.set(0x089fff); // Blue for middle
+                    child.material.color.set(0x008000); // Green for middle
                     break;
                 case 'inside':
-                    child.material.color.set(0x0000ff); // Blue for inside
+                    child.material.color.set(0xff0000); // Red for inside
                     break;
                 case 'sole_bottom':
                     child.material.color.set(0x00ff00); // Green for sole bottom
                     break;
                 case 'sole_top':
-                    child.material.color.set(0xffff00); // Yellow for sole top
+                    child.material.color.set(0xfffff0); // Yellow for sole top
                     break;
                 default:
                     child.material.color.set(0xffffff); // Default white for other parts
