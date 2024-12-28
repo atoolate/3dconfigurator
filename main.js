@@ -30,14 +30,67 @@ sphereGeometry.scale(-1, 1, 1); // Invert the sphere to make the texture appear 
 
 // Load the environment map texture
 const textureLoader = new THREE.TextureLoader();
-const environmentMap = textureLoader.load('models/images/enviroment/env-map.jpg');
+const environmentMap = textureLoader.load('models/images/enviroment/metal.jpg');
 
 // Create a material for the sphere with the environment map
-const sphereMaterial = new THREE.MeshBasicMaterial({ map: environmentMap });
+const sphereMaterial = new THREE.MeshBasicMaterial({ 
+    map: environmentMap,
+    color: 0x00ff00, // Green color
+    transparent: true,
+    opacity: 0.4 // Adjust opacity as needed
+});
+// Add smoke to the scene
+const smokeTexture = textureLoader.load('models/images/enviroment/fart07.png');
+const smokeMaterial = new THREE.MeshBasicMaterial({
+    map: smokeTexture,
+    transparent: true,
+    opacity: 0.2,
+    blending: THREE.AdditiveBlending, // Use additive blending to avoid black background
+    depthWrite: false // Disable depth write to avoid depth issues
+});
+const smokeGeometry = new THREE.PlaneGeometry(10, 10);
+
+// Create multiple smoke meshes around the shoe
+const smokeMeshes = [];
+const smokePositions = [
+    { x: 0, y: 0, z: -5 },
+    { x: 5, y: 5, z: 5 },
+    { x: -5, y: 5, z: 5 },
+    { x: 0, y: -5, z: 5 }
+];
+
+smokePositions.forEach(pos => {
+    const smokeMesh = new THREE.Mesh(smokeGeometry, smokeMaterial);
+    smokeMesh.position.set(pos.x, pos.y, pos.z);
+    scene.add(smokeMesh);
+    smokeMeshes.push(smokeMesh);
+});
 
 // Create the sphere mesh and add it to the scene
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 scene.add(sphere);
+
+// Rotate the sphere
+function rotateSphere() {
+    sphere.rotation.y += 0.001; // Adjust the rotation speed as needed
+    requestAnimationFrame(rotateSphere);
+}
+rotateSphere();
+
+// Animate the smoke
+function animateSmoke() {
+    smokeMeshes.forEach(smokeMesh => {
+        smokeMesh.position.y += 0.01; // Adjust the speed and direction as needed
+        if (smokeMesh.position.y > 10) {
+            smokeMesh.position.y = -10; // Reset position if it goes too high
+        }
+        // Make the smoke always face the camera
+        smokeMesh.lookAt(camera.position);
+    });
+    requestAnimationFrame(animateSmoke);
+}
+animateSmoke();
+
 // Handle window resize
 window.addEventListener('resize', updateRendererSize);
 updateRendererSize(); // Initial size setup
