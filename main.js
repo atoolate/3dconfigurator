@@ -12,6 +12,10 @@ camera.position.set(4, 2, 0); // Adjust initial camera position
 
 // Renderer setup
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.shadowMap.enabled = true; // Enable shadow maps
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Soft shadow map
 
 // Append the renderer to the container
 const container = document.getElementById('configurator-container');
@@ -99,6 +103,7 @@ updateRendererSize(); // Initial size setup
 // Add point light
 const pointLight = new THREE.PointLight(0xffffff, 1, 100);
 pointLight.position.set(1, 8, 2);
+pointLight.castShadow = true; // Enable shadows for the point light
 scene.add(pointLight);
 // add ambient light
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -107,6 +112,7 @@ scene.add(ambientLight);
 // Add directional light
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(0, 1, 0);
+directionalLight.castShadow = true; // Enable shadows for the directional light
 scene.add(directionalLight);
 
 // Setup DRACOLoader and GLTFLoader
@@ -158,12 +164,14 @@ gltfLoader.load('/models/shoe.glb', (gltf) => {
     shoeModel.traverse((child) => {
         if (child.isMesh) {
             child.material.color.set(0xffffff); // Set all parts to white
+            child.castShadow = true; // Enable shadows for the shoe parts
+            child.receiveShadow = true; // Enable shadows for the shoe parts
         }
     });
 
     scene.add(shoeModel);
     // Scale the model
-    shoeModel.scale.set(11, 11, 11);
+    shoeModel.scale.set(12, 12, 12);
     
     // Now that the model is loaded, we can initialize the GUI
     initGUI();
@@ -252,6 +260,7 @@ function initGUI() {
     const logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
     logoMesh.position.set(0, -0.9, 0); // Position the logo above the platform
     logoMesh.rotation.x = -Math.PI / 2; // Rotate the logo to lay flat on the platform
+    logoMesh.receiveShadow = true; // Enable shadows for the logo
     scene.add(logoMesh);
     
 
