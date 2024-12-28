@@ -190,7 +190,7 @@ loader.load('/path/to/env-map.jpg', (texture) => {
 });
 
 // Camera setup
-camera.position.set(4, 2, 4); // Adjust initial camera position
+camera.position.set(6, 2, 4); // Adjust initial camera position
 
 // OrbitControls setup for camera manipulation
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -280,8 +280,13 @@ document.querySelectorAll('.configurator-option button').forEach(button => {
 
         if (event.target.id === 'color-button') {
             document.querySelector('.color-palette').style.display = 'flex';
+            document.querySelector('.fabric-palette').style.display = 'none';
+        } else if (event.target.id === 'fabric-button') {
+            document.querySelector('.fabric-palette').style.display = 'flex';
+            document.querySelector('.color-palette').style.display = 'none';
         } else {
             document.querySelector('.color-palette').style.display = 'none';
+            document.querySelector('.fabric-palette').style.display = 'none';
         }
     });
 });
@@ -299,6 +304,26 @@ document.querySelectorAll('.color-item').forEach(item => {
             });
         }
         document.querySelectorAll('.color-item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+    });
+});
+
+// Event listeners for fabric items
+document.querySelectorAll('.fabric-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const fabric = item.getAttribute('data-fabric');
+        const partName = parts[currentPartIndex];
+        if (shoeModel) {
+            const fabricTexture = textureLoader.load(`/public/models/images/fabric/${fabric}.jpg`);
+            shoeModel.traverse((child) => {
+                if (child.isMesh && child.name === partName) {
+                    child.material.map = fabricTexture;
+                    child.material.color.set(0xffffff); // Set the color to white
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+        document.querySelectorAll('.fabric-item').forEach(i => i.classList.remove('selected'));
         item.classList.add('selected');
     });
 });
