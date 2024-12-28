@@ -108,10 +108,12 @@ h2 {
 .configurator-settings {
     display: flex;
     flex-direction: column;
-    align-items: center;
     font-size: 1rem;
     font-weight: bold;
-    position: relative;
+    position: absolute;
+    justify-content: center;
+    top: 75%;
+    left: 30%;
     z-index: 1;
 }
 
@@ -170,7 +172,7 @@ h2 {
 .color-item {
     width: 50px;
     height: 50px;
-    border: 2px solid transparent;
+    border: 3px solid transparent;
     cursor: pointer;
     transition: transform 0.2s ease, border 0.2s ease;
 }
@@ -180,5 +182,5 @@ h2 {
 }
 
 .color-item.selected {
-    border-color: black;
+    border-color: #00ff00;
 }
