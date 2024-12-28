@@ -90,34 +90,7 @@ gltfLoader.load('/models/shoe.glb', (gltf) => {
     
     shoeModel.traverse((child) => {
         if (child.isMesh) {
-            console.log('Part name:', child.name); // Debugging: log part names
-            // Check the name of the part and set the color accordingly
-            switch (child.name) {
-                case 'laces':
-                    child.material.color.set(0xff0000); // Red for laces
-                    break;
-                case 'outside_1':
-                    child.material.color.set(0x0000ff); // Blue for outside front
-                    break;
-                case 'outside_2':
-                    child.material.color.set(0xffa500); // Orange for outside back
-                    break;
-                case 'outside_3':
-                    child.material.color.set(0x008000); // Green for middle
-                    break;
-                case 'inside':
-                    child.material.color.set(0xff0000); // Red for inside
-                    break;
-                case 'sole_bottom':
-                    child.material.color.set(0x00ff00); // Green for sole bottom
-                    break;
-                case 'sole_top':
-                    child.material.color.set(0xfffff0); // Yellow for sole top
-                    break;
-                default:
-                    child.material.color.set(0xffffff); // Default white for other parts
-                    break;
-            }
+            child.material.color.set(0xffffff); // Set all parts to white
         }
     });
 
@@ -223,9 +196,10 @@ document.querySelectorAll('.configurator-option button').forEach(button => {
 document.querySelectorAll('.color-item').forEach(item => {
     item.addEventListener('click', () => {
         const color = item.getAttribute('data-color');
+        const partName = parts[currentPartIndex];
         if (shoeModel) {
             shoeModel.traverse((child) => {
-                if (child.isMesh) {
+                if (child.isMesh && child.name === partName) {
                     child.material.color.set(color);
                 }
             });
@@ -240,12 +214,12 @@ document.getElementById('prev-part-button').addEventListener('click', () => {
     currentPartIndex = (currentPartIndex - 1 + parts.length) % parts.length;
     updatePartSelector();
 });
-
+// Event listeners for part selector
 document.getElementById('next-part-button').addEventListener('click', () => {
     currentPartIndex = (currentPartIndex + 1) % parts.length;
     updatePartSelector();
 });
-
+// Update part selector
 function updatePartSelector() {
     const partName = parts[currentPartIndex];
     document.getElementById('part-name').textContent = partName.replace('_', ' ').toUpperCase();
@@ -253,7 +227,7 @@ function updatePartSelector() {
     zoomToPart(partName);
 }
 
-
+// change part color by clicking the color
 
 // Animation loop
 function animate() {
