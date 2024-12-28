@@ -24,7 +24,20 @@ function updateRendererSize() {
     camera.aspect = clientWidth / clientHeight;
     camera.updateProjectionMatrix();
 }
+// Create a sphere geometry for the environment map
+const sphereGeometry = new THREE.SphereGeometry(500, 60, 40);
+sphereGeometry.scale(-1, 1, 1); // Invert the sphere to make the texture appear inside
 
+// Load the environment map texture
+const textureLoader = new THREE.TextureLoader();
+const environmentMap = textureLoader.load('models/images/enviroment/env-map.jpg');
+
+// Create a material for the sphere with the environment map
+const sphereMaterial = new THREE.MeshBasicMaterial({ map: environmentMap });
+
+// Create the sphere mesh and add it to the scene
+const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+scene.add(sphere);
 // Handle window resize
 window.addEventListener('resize', updateRendererSize);
 updateRendererSize(); // Initial size setup
