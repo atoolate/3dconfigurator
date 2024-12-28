@@ -184,3 +184,26 @@ h2 {
 .color-item.selected {
     border-color: #00ff00;
 }
+@keyframes buttonColorChange {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.btn button {
+    animation: buttonColorChange 5s linear infinite;
+    background: linear-gradient(90deg, #000000, #212121, #00ff00, #1d1d1d, #000000);
+    background-size: 400% 100%;
+    transition: background-position 1s ease;
+}
+
+.btn button:hover {
+    background-position: 100% 50%;
+    color: black;
+}
