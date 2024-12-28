@@ -51,6 +51,7 @@ const smokeMaterial = new THREE.MeshBasicMaterial({
 const smokeGeometry = new THREE.PlaneGeometry(10, 10);
 
 // Create multiple smoke meshes around the shoe
+//array om smoke meshes te bewaren
 const smokeMeshes = [];
 const smokePositions = [
     { x: 0, y: 0, z: -5 },
@@ -162,7 +163,7 @@ gltfLoader.load('/models/shoe.glb', (gltf) => {
 
     scene.add(shoeModel);
     // Scale the model
-    shoeModel.scale.set(15, 15, 15);
+    shoeModel.scale.set(11, 11, 11);
     
     // Now that the model is loaded, we can initialize the GUI
     initGUI();
@@ -181,7 +182,7 @@ loader.load('/path/to/env-map.jpg', (texture) => {
 });
 
 // Camera setup
-camera.position.set(5, 2, 0); // Adjust initial camera position
+camera.position.set(4, 2, 4); // Adjust initial camera position
 
 // OrbitControls setup for camera manipulation
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -235,6 +236,24 @@ function initGUI() {
     shoeFolder.add(shoeModel.position, 'z', -10, 10).name('Position Z');
 
     shoeFolder.open();
+
+    // Create a showcase platform
+    const platformGeometry = new THREE.CylinderGeometry(4, 5, 5, 32);
+    const platformMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+    const platform = new THREE.Mesh(platformGeometry, platformMaterial);
+    platform.position.set(0, -3.5, 0); // Position the platform below the shoe
+    platform.receiveShadow = true; // Enable shadows for the platform
+    scene.add(platform);
+
+    // Add logo on top of the platform
+    const logoTexture = textureLoader.load('/logo/swear-logo-square-white.png'); // Replace with the correct path to your logo image
+    const logoMaterial = new THREE.MeshBasicMaterial({ map: logoTexture, color: 0xffffff, transparent: true });
+    const logoGeometry = new THREE.PlaneGeometry(4, 4); // Adjust size as needed
+    const logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
+    logoMesh.position.set(0, -0.9, 0); // Position the logo above the platform
+    logoMesh.rotation.x = -Math.PI / 2; // Rotate the logo to lay flat on the platform
+    scene.add(logoMesh);
+    
 
     // Add controls to change camera position
     const cameraFolder = gui.addFolder('Camera');
