@@ -128,6 +128,9 @@ let shoeModel = null;
 const parts = ['laces', 'outside_1', 'outside_2', 'outside_3', 'inside', 'sole_bottom', 'sole_top'];
 let currentPartIndex = 0;
 
+// Store selected colors for each part
+const selectedColors = {};
+
 // Define camera positions and targets for each part
 const cameraPositions = {
     sole_top: { position: { x: 6, y: 0, z: -2 }, target: { x: 0, y: 0, z: 0 } },
@@ -143,7 +146,7 @@ function zoomToPart(partName) {
     const cameraPosition = cameraPositions[partName];
     if (cameraPosition) {
         gsap.to(camera.position, {
-            duration: 1.,
+            duration: 1,
             x: cameraPosition.position.x,
             y: cameraPosition.position.y,
             z: cameraPosition.position.z,
@@ -296,6 +299,7 @@ document.querySelectorAll('.color-item').forEach(item => {
     item.addEventListener('click', () => {
         const color = item.getAttribute('data-color');
         const partName = parts[currentPartIndex];
+        selectedColors[partName] = color; // Store the selected color
         if (shoeModel) {
             shoeModel.traverse((child) => {
                 if (child.isMesh && child.name === partName) {
@@ -318,7 +322,7 @@ document.querySelectorAll('.fabric-item').forEach(item => {
             shoeModel.traverse((child) => {
                 if (child.isMesh && child.name === partName) {
                     child.material.map = fabricTexture;
-                    child.material.color.set(0xffffff); // Set the color to white
+                    child.material.color.set(selectedColors[partName] || 0xffffff); // Reapply the selected color or default to white
                     child.material.needsUpdate = true;
                 }
             });
