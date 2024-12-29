@@ -384,6 +384,103 @@ function updatePartSelector() {
 
 // change part color by clicking the color
 
+// Raycaster setup
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let currentIntersect = null;
+
+// Mouse move event
+window.addEventListener('mousemove', (event) => {
+    // Update mouse coordinates
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Raycaster
+    raycaster.setFromCamera(mouse, camera);
+
+    // Intersects
+    const intersects = raycaster.intersectObjects(shoeModel.children, true);
+
+    if (intersects.length > 0) {
+        const firstIntersect = intersects[0];
+
+        // Change color of the intersected object if its name is in the parts array
+        if (parts.includes(firstIntersect.object.name)) {
+            firstIntersect.object.material.color.set(0xff0000); // Change to red color
+        }
+
+        // Reset color of previously intersected object
+        if (currentIntersect && currentIntersect !== firstIntersect.object) {
+            currentIntersect.material.color.set(0xffffff); // Change back to original color
+        }
+
+        currentIntersect = firstIntersect.object;
+    } else {
+        // Reset color if no intersections
+        if (currentIntersect) {
+            currentIntersect.material.color.set(0xffffff); // Change back to original color
+            currentIntersect = null;
+        }
+    }
+});
+
+// Mouse click event
+window.addEventListener('click', (event) => {
+    // Update mouse coordinates
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Raycaster
+    raycaster.setFromCamera(mouse, camera);
+
+    // Intersects
+    const intersects = raycaster.intersectObjects(shoeModel.children, true);
+
+    if (intersects.length > 0) {
+        const firstIntersect = intersects[0];
+
+        // Loop over the children of the intersected object
+        firstIntersect.object.children.forEach(child => {
+            if (parts.includes(child.name)) {
+                // Change color of the child object
+                child.material.color.set(0xff0000); // Change to red color
+            }
+        });
+
+        // If name is in parts array
+        if (parts.includes(firstIntersect.object.name)) {
+            // GSAP animate z position towards object
+            // Your animation code here
+        }
+    }
+});
+
+// Mouse move event
+window.addEventListener('mousemove', (event) => {
+    // Calculate mouse position in normalized device coordinates
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Raycaster
+    raycaster.setFromCamera(mouse, camera);
+
+    // Intersects
+    const intersects = raycaster.intersectObjects(shoeModel.children, true);
+    const firstIntersect = intersects[0];
+
+    if (firstIntersect && firstIntersect.object.name === 'Object_3') {
+        // Make emissive
+        firstIntersect.object.material.emissive.set(0xff0000);
+    } else {
+        // Remove emissive
+        shoeModel.traverse((child) => {
+            if (child.isMesh) {
+                child.material.emissive.set(0x000000);
+            }
+        });
+    }
+});
+
 // Animation loop
 function animate() {
     controls.update();
