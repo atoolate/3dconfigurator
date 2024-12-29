@@ -133,12 +133,12 @@ const selectedColors = {};
 
 // Define camera positions and targets for each part
 const cameraPositions = {
-    sole_top: { position: { x: 6, y: 0, z: -2 }, target: { x: 0, y: 0, z: 0 } },
-    outside_1: { position: { x: 6, y: 2, z:-2 }, target: { x: 0, y: 0, z: 0} },
-    outside_2: { position: { x: -6, y: 2, z:-2 }, target: { x: 0, y: 0, z: 0 } },
-    outside_3: { position: { x: 0, y: 2, z: -6 }, target: { x: 0, y: 0, z: 0 } },
-    inside: { position: { x: 0, y: 5, z: 6 }, target: { x: 0, y: 0, z: 0 } },
-    sole_bottom: { position: { x: 0, y: -5, z: 3 }, target: { x: 0, y: 2, z: -1 } },
+    sole_top: { position: { x: -6, y: 0, z: 2 }, target: { x: 0, y: 0, z: 0 } },
+    outside_1: { position: { x: -6, y: 2, z: 2 }, target: { x: 0, y: 0, z: 0 } },
+    outside_2: { position: { x: 6, y: 2, z: 2 }, target: { x: 0, y: 0, z: 0 } },
+    outside_3: { position: { x: 4.2, y: 3, z: 1 }, target: { x: 0, y: 0, z: 0 } },
+    inside: { position: { x: 1, y: 7.5, z: -0.2 }, target: { x: 0, y: 0, z: 0 } },
+    sole_bottom: { position: { x: 0, y: -3, z: -4 }, target: { x: 0, y: 0, z: 0 } },
     laces: { position: { x: 0, y: 5, z: 4 }, target: { x: 0, y: 0, z: 0 } } // Adjusted z position for better view
 };
 
@@ -196,7 +196,7 @@ loader.load('/path/to/env-map.jpg', (texture) => {
 });
 
 // Camera setup
-camera.position.set(6, 2, 4); // Adjust initial camera position
+camera.position.set(6, 1, 4); // Adjust initial camera position
 
 // OrbitControls setup for camera manipulation
 const controls = new OrbitControls(camera, renderer.domElement);
