@@ -321,10 +321,14 @@ document.querySelectorAll('.fabric-item').forEach(item => {
         const fabric = item.getAttribute('data-fabric');
         const partName = parts[currentPartIndex];
         if (shoeModel) {
-            const fabricTexture = textureLoader.load(`/public/models/images/fabric/${fabric}.jpg`);
             shoeModel.traverse((child) => {
                 if (child.isMesh && child.name === partName) {
-                    child.material.map = fabricTexture;
+                    if (fabric === 'none') {
+                        child.material.map = null; // Remove the texture
+                    } else {
+                        const fabricTexture = textureLoader.load(`/public/models/images/fabric/${fabric}.jpg`);
+                        child.material.map = fabricTexture;
+                    }
                     child.material.color.set(selectedColors[partName] || 0xffffff); // Reapply the selected color or default to white
                     child.material.needsUpdate = true;
                 }
@@ -334,6 +338,7 @@ document.querySelectorAll('.fabric-item').forEach(item => {
         item.classList.add('selected');
     });
 });
+
 // Event listener for randomizer button
 document.getElementById('randomizer-button').addEventListener('click', () => {
     parts.forEach(partName => {
