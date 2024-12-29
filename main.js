@@ -61,7 +61,7 @@ const smokePositions = [
     { x: 0, y: 0, z: -5 },
     { x: 5, y: 5, z: 5 },
     { x: -5, y: 5, z: 5 },
-    { x: 0, y: -5, z: 5 }
+    { x: -3.5, y: -5, z: 5 }
 ];
 
 smokePositions.forEach(pos => {
