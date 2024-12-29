@@ -244,6 +244,8 @@ function initGUI() {
         }
     });
 
+    // test
+
     // Add controls to change shoe position
     shoeFolder.add(shoeModel.position, 'x', -10, 10).name('Position X');
     shoeFolder.add(shoeModel.position, 'y', -10, 10).name('Position Y');
