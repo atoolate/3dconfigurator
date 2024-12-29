@@ -166,7 +166,10 @@ gltfLoader.load('/models/shoe.glb', (gltf) => {
     
     shoeModel.traverse((child) => {
         if (child.isMesh) {
-            child.material.color.set(0xffffff); // Set all parts to white
+            child.material = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                roughness: 0.4
+            });
             child.castShadow = true; // Enable shadows for the shoe parts
             child.receiveShadow = true; // Enable shadows for the shoe parts
         }
