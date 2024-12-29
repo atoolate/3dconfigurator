@@ -145,6 +145,7 @@ h2 {
     justify-content: space-between;
     width: 100%;
     background-color: #000000;
+    min-width: 602px;
 }
 
 .part-selector button {
@@ -190,7 +191,6 @@ h2 {
     flex-wrap: wrap;
     justify-content: center;
     margin-top: 16px;
-    min-width: 602px;
 }
 
 .fabric-item {

@@ -331,7 +331,31 @@ document.querySelectorAll('.fabric-item').forEach(item => {
         item.classList.add('selected');
     });
 });
+// Event listener for randomizer button
+document.getElementById('randomizer-button').addEventListener('click', () => {
+    parts.forEach(partName => {
+        // Randomly select a color
+        const randomColorItem = document.querySelectorAll('.color-item')[Math.floor(Math.random() * document.querySelectorAll('.color-item').length)];
+        const randomColor = randomColorItem.getAttribute('data-color');
+        selectedColors[partName] = randomColor;
 
+        // Randomly select a fabric
+        const randomFabricItem = document.querySelectorAll('.fabric-item')[Math.floor(Math.random() * document.querySelectorAll('.fabric-item').length)];
+        const randomFabric = randomFabricItem.getAttribute('data-fabric');
+        const fabricTexture = textureLoader.load(`/public/models/images/fabric/${randomFabric}.jpg`);
+
+        // Apply random color and fabric to the part
+        if (shoeModel) {
+            shoeModel.traverse((child) => {
+                if (child.isMesh && child.name === partName) {
+                    child.material.color.set(randomColor);
+                    child.material.map = fabricTexture;
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+    });
+});
 // Event listeners for part selector
 document.getElementById('prev-part-button').addEventListener('click', () => {
     currentPartIndex = (currentPartIndex - 1 + parts.length) % parts.length;
