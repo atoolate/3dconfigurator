@@ -145,22 +145,6 @@ const cameraPositions = {
     laces: { position: { x: 0, y: 5, z: 4 }, target: { x: 0, y: 0, z: 0 } } // Adjusted z position for better view
 };
 
-function zoomToPart(partName) {
-    const cameraPosition = cameraPositions[partName];
-    if (cameraPosition) {
-        gsap.to(camera.position, {
-            duration: 1,
-            x: cameraPosition.position.x,
-            y: cameraPosition.position.y,
-            z: cameraPosition.position.z,
-            ease: "power2.inOut",
-            onUpdate: () => {
-                camera.lookAt(new THREE.Vector3(cameraPosition.target.x, cameraPosition.target.y, cameraPosition.target.z));
-                controls.target.set(cameraPosition.target.x, cameraPosition.target.y, cameraPosition.target.z);
-            }
-        });
-    }
-}
 
 // Load GLTF/GLB model
 gltfLoader.load('/models/shoe.glb', (gltf) => {
@@ -416,19 +400,27 @@ function onClick(event) {
     if (intersects.length > 0) {
         const intersectedPart = intersects[0].object.name;
         zoomToPart(intersectedPart);
+        selectPart(intersectedPart);
     }
 }
 
-// Animation loop
+// Function to select a part and update the UI
+function selectPart(partName) {
+    const partNameElement = document.getElementById('part-name');
+    partNameElement.textContent = partName.toUpperCase();
+
+    // Update the color and fabric options based on the selected part
+    // This assumes you have functions to update the color and fabric palettes
+    updateColorPalette(partName);
+    updateFabricPalette(partName);
+}
+
+// Update the animate function to ensure only one part is highlighted at a time
 function animate() {
     controls.update();
 
-    // Check if shoeModel is loaded before accessing its children
     if (shoeModel) {
-        // Update the raycaster
         raycaster.setFromCamera(mouse, camera);
-
-        // Calculate objects intersecting the raycaster
         const intersects = raycaster.intersectObjects(shoeModel.children, true);
 
         // Reset all parts to their original color
@@ -441,10 +433,29 @@ function animate() {
         // Highlight the first intersected part
         if (intersects.length > 0) {
             intersects[0].object.material.emissive.setHex(0x00ff00); // Green color with low opacity
+            intersects[0].object.material.emissiveIntensity = 0.1; // Lower opacity
         }
     }
 
     renderer.render(scene, camera);
+}
+
+// Update the zoomToPart function to handle part names correctly
+function zoomToPart(partName) {
+    const cameraPosition = cameraPositions[partName];
+    if (cameraPosition) {
+        gsap.to(camera.position, {
+            duration: 1,
+            x: cameraPosition.position.x,
+            y: cameraPosition.position.y,
+            z: cameraPosition.position.z,
+            ease: "power2.inOut",
+            onUpdate: () => {
+                camera.lookAt(new THREE.Vector3(cameraPosition.target.x, cameraPosition.target.y, cameraPosition.target.z));
+                controls.target.set(cameraPosition.target.x, cameraPosition.target.y, cameraPosition.target.z);
+            }
+        });
+    }
 }
 
 // Start animation loop
