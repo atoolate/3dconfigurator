@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'; // Import DRACOLoader
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui'; // Import dat.GUI
 import gsap from 'gsap'; // Import gsap
@@ -28,6 +28,7 @@ function updateRendererSize() {
     camera.aspect = clientWidth / clientHeight;
     camera.updateProjectionMatrix();
 }
+
 // Create a sphere geometry for the environment map
 const sphereGeometry = new THREE.SphereGeometry(500, 60, 40);
 sphereGeometry.scale(-1, 1, 1); // Invert the sphere to make the texture appear inside
@@ -43,6 +44,7 @@ const sphereMaterial = new THREE.MeshBasicMaterial({
     transparent: true,
     opacity: 0.4 // Adjust opacity as needed
 });
+
 // Add smoke to the scene
 const smokeTexture = textureLoader.load('models/images/enviroment/fart07.png');
 const smokeMaterial = new THREE.MeshBasicMaterial({
@@ -55,7 +57,6 @@ const smokeMaterial = new THREE.MeshBasicMaterial({
 const smokeGeometry = new THREE.PlaneGeometry(10, 10);
 
 // Create multiple smoke meshes around the shoe
-//array om smoke meshes te bewaren
 const smokeMeshes = [];
 const smokePositions = [
     { x: 0, y: 0, z: -5 },
@@ -105,7 +106,8 @@ const pointLight = new THREE.PointLight(0xffffff, 1, 100);
 pointLight.position.set(1, 8, 2);
 pointLight.castShadow = true; // Enable shadows for the point light
 scene.add(pointLight);
-// add ambient light
+
+// Add ambient light
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
@@ -115,9 +117,10 @@ directionalLight.position.set(0, 1, 0);
 directionalLight.castShadow = true; // Enable shadows for the directional light
 scene.add(directionalLight);
 
-// Setup DRACOLoader and GLTFLoader
+// Setup GLTFLoader and DRACOLoader
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/'); // Draco decoder path
+
 const gltfLoader = new GLTFLoader();
 gltfLoader.setDRACOLoader(dracoLoader);
 
@@ -159,7 +162,6 @@ function zoomToPart(partName) {
     }
 }
 
-
 // Load GLTF/GLB model
 gltfLoader.load('/models/shoe.glb', (gltf) => {
     shoeModel = gltf.scene;
@@ -175,9 +177,11 @@ gltfLoader.load('/models/shoe.glb', (gltf) => {
         }
     });
 
-    scene.add(shoeModel);
-    // Scale the model
+    // Ensure the model's position and scale are correctly set
+    shoeModel.position.set(0, 0, 0);
     shoeModel.scale.set(12, 12, 12);
+
+    scene.add(shoeModel);
     
     // Now that the model is loaded, we can initialize the GUI
     initGUI();
@@ -243,8 +247,6 @@ function initGUI() {
             });
         }
     });
-
-    // test
 
     // Add controls to change shoe position
     shoeFolder.add(shoeModel.position, 'x', -10, 10).name('Position X');
@@ -366,16 +368,19 @@ document.getElementById('randomizer-button').addEventListener('click', () => {
         }
     });
 });
+
 // Event listeners for part selector
 document.getElementById('prev-part-button').addEventListener('click', () => {
     currentPartIndex = (currentPartIndex - 1 + parts.length) % parts.length;
     updatePartSelector();
 });
+
 // Event listeners for part selector
 document.getElementById('next-part-button').addEventListener('click', () => {
     currentPartIndex = (currentPartIndex + 1) % parts.length;
     updatePartSelector();
 });
+
 // Update part selector
 function updatePartSelector() {
     const partName = parts[currentPartIndex];
@@ -384,108 +389,61 @@ function updatePartSelector() {
     zoomToPart(partName);
 }
 
-// change part color by clicking the color
-
 // Raycaster setup
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-let currentIntersect = null;
 
-// Mouse move event
-window.addEventListener('mousemove', (event) => {
-    // Update mouse coordinates
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+// Event listener for mouse movement
+window.addEventListener('mousemove', onMouseMove);
 
-    // Raycaster
+function onMouseMove(event) {
+    const rect = container.getBoundingClientRect();
+    // Calculate mouse position in normalized device coordinates (-1 to +1) for both components
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+}
+
+// Add this code after the existing mousemove event listener
+window.addEventListener('click', onClick);
+
+function onClick(event) {
+    // Update the raycaster with the current mouse position
     raycaster.setFromCamera(mouse, camera);
 
-    // Intersects
+    // Calculate objects intersecting the raycaster
     const intersects = raycaster.intersectObjects(shoeModel.children, true);
 
     if (intersects.length > 0) {
-        const firstIntersect = intersects[0];
-
-        // Change color of the intersected object if its name is in the parts array
-        if (parts.includes(firstIntersect.object.name)) {
-            firstIntersect.object.material.color.set(0xff0000); // Change to red color
-        }
-
-        // Reset color of previously intersected object
-        if (currentIntersect && currentIntersect !== firstIntersect.object) {
-            currentIntersect.material.color.set(0xffffff); // Change back to original color
-        }
-
-        currentIntersect = firstIntersect.object;
-    } else {
-        // Reset color if no intersections
-        if (currentIntersect) {
-            currentIntersect.material.color.set(0xffffff); // Change back to original color
-            currentIntersect = null;
-        }
+        const intersectedPart = intersects[0].object.name;
+        zoomToPart(intersectedPart);
     }
-});
-
-// Mouse click event
-window.addEventListener('click', (event) => {
-    // Update mouse coordinates
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    // Raycaster
-    raycaster.setFromCamera(mouse, camera);
-
-    // Intersects
-    const intersects = raycaster.intersectObjects(shoeModel.children, true);
-
-    if (intersects.length > 0) {
-        const firstIntersect = intersects[0];
-
-        // Loop over the children of the intersected object
-        firstIntersect.object.children.forEach(child => {
-            if (parts.includes(child.name)) {
-                // Change color of the child object
-                child.material.color.set(0xff0000); // Change to red color
-            }
-        });
-
-        // If name is in parts array
-        if (parts.includes(firstIntersect.object.name)) {
-            // GSAP animate z position towards object
-            // Your animation code here
-        }
-    }
-});
-
-// Mouse move event
-window.addEventListener('mousemove', (event) => {
-    // Calculate mouse position in normalized device coordinates
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    // Raycaster
-    raycaster.setFromCamera(mouse, camera);
-
-    // Intersects
-    const intersects = raycaster.intersectObjects(shoeModel.children, true);
-    const firstIntersect = intersects[0];
-
-    if (firstIntersect && firstIntersect.object.name === 'Object_3') {
-        // Make emissive
-        firstIntersect.object.material.emissive.set(0xff0000);
-    } else {
-        // Remove emissive
-        shoeModel.traverse((child) => {
-            if (child.isMesh) {
-                child.material.emissive.set(0x000000);
-            }
-        });
-    }
-});
+}
 
 // Animation loop
 function animate() {
     controls.update();
+
+    // Check if shoeModel is loaded before accessing its children
+    if (shoeModel) {
+        // Update the raycaster
+        raycaster.setFromCamera(mouse, camera);
+
+        // Calculate objects intersecting the raycaster
+        const intersects = raycaster.intersectObjects(shoeModel.children, true);
+
+        // Reset all parts to their original color
+        shoeModel.traverse((child) => {
+            if (child.isMesh) {
+                child.material.emissive.setHex(0x000000);
+            }
+        });
+
+        // Highlight the first intersected part
+        if (intersects.length > 0) {
+            intersects[0].object.material.emissive.setHex(0x00ff00); // Green color with low opacity
+        }
+    }
+
     renderer.render(scene, camera);
 }
 
