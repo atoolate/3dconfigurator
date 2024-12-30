@@ -410,9 +410,73 @@ function selectPart(partName) {
     partNameElement.textContent = partName.toUpperCase();
 
     // Update the color and fabric options based on the selected part
-    // This assumes you have functions to update the color and fabric palettes
     updateColorPalette(partName);
     updateFabricPalette(partName);
+}
+
+// Function to update the color palette based on the selected part
+function updateColorPalette(partName) {
+    // Example implementation: update the color palette UI
+    const colorPalette = document.querySelector('.color-palette');
+    colorPalette.innerHTML = ''; // Clear existing colors
+
+    // Add new colors for the selected part (example colors)
+    const colors = ['#fce4ec', '#f50057', '#d50000', '#ff5722', '#ffeb3b', '#ffffff', '#8bc34a', '#009688', '#03a9f4', '#673ab7', '#000000'];
+    colors.forEach(color => {
+        const colorItem = document.createElement('div');
+        colorItem.className = 'color-item';
+        colorItem.style.backgroundColor = color;
+        colorItem.dataset.color = color;
+        colorItem.addEventListener('click', () => changeColor(partName, color));
+        colorPalette.appendChild(colorItem);
+    });
+}
+
+// Function to update the fabric palette based on the selected part
+function updateFabricPalette(partName) {
+    // Example implementation: update the fabric palette UI
+    const fabricPalette = document.querySelector('.fabric-palette');
+    fabricPalette.innerHTML = ''; // Clear existing fabrics
+
+    // Add new fabrics for the selected part (example fabrics)
+    const fabrics = [
+        { name: 'none', image: '', color: '#cccccc' },
+        { name: 'dirty_carpet_diff_4k', image: '/public/models/images/fabric/dirty_carpet_diff_4k.jpg' },
+        { name: 'leather', image: '/public/models/images/fabric/leather.jpg' },
+        { name: 'denim', image: '/public/models/images/fabric/denim.jpg' },
+        { name: 'vegan-leather', image: '/public/models/images/fabric/Leather008_2K-JPG_Color.jpg' }
+    ];
+    fabrics.forEach(fabric => {
+        const fabricItem = document.createElement('div');
+        fabricItem.className = 'fabric-item';
+        if (fabric.image) {
+            fabricItem.style.backgroundImage = `url(${fabric.image})`;
+        } else {
+            fabricItem.style.backgroundColor = fabric.color;
+        }
+        fabricItem.dataset.fabric = fabric.name;
+        fabricItem.addEventListener('click', () => changeFabric(partName, fabric.name));
+        fabricPalette.appendChild(fabricItem);
+    });
+}
+
+// Function to change the color of the selected part
+function changeColor(partName, color) {
+    const part = shoeModel.getObjectByName(partName);
+    if (part && part.material) {
+        part.material.color.set(color);
+    }
+}
+
+// Function to change the fabric of the selected part
+function changeFabric(partName, fabricName) {
+    const part = shoeModel.getObjectByName(partName);
+    if (part && part.material) {
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load(`/public/models/images/fabric/${fabricName}.jpg`);
+        part.material.map = texture;
+        part.material.needsUpdate = true;
+    }
 }
 
 // Update the animate function to ensure only one part is highlighted at a time
@@ -445,7 +509,7 @@ function zoomToPart(partName) {
     const cameraPosition = cameraPositions[partName];
     if (cameraPosition) {
         gsap.to(camera.position, {
-            duration: 1,
+            duration: 1.5,
             x: cameraPosition.position.x,
             y: cameraPosition.position.y,
             z: cameraPosition.position.z,
