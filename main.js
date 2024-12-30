@@ -128,7 +128,7 @@ gltfLoader.setDRACOLoader(dracoLoader);
 let shoeModel = null;
 
 // Parts of the shoe that can be customized
-const parts = ['laces', 'outside_1', 'outside_2', 'outside_3', 'inside', 'sole_bottom', 'sole_top'];
+const parts = ['select_part','laces', 'outside_1', 'outside_2', 'outside_3', 'inside', 'sole_bottom', 'sole_top'];
 let currentPartIndex = 0;
 
 // Store selected colors for each part
@@ -136,6 +136,7 @@ const selectedColors = {};
 
 // Define camera positions and targets for each part
 const cameraPositions = {
+    select_part: { position: { x: 7, y: 2, z: 0 }, target: { x: 0, y: 0, z: 0 } },
     sole_top: { position: { x: -6, y: 0, z: 2 }, target: { x: 0, y: 0, z: 0 } },
     outside_1: { position: { x: -6, y: 2, z: 2 }, target: { x: 0, y: 0, z: 0 } },
     outside_2: { position: { x: 6, y: 2, z: 2 }, target: { x: 0, y: 0, z: 0 } },
@@ -145,6 +146,17 @@ const cameraPositions = {
     laces: { position: { x: 0, y: 5, z: 4 }, target: { x: 0, y: 0, z: 0 } } // Adjusted z position for better view
 };
 
+// Mapping of internal part names to display names
+const partDisplayNames = {
+    select_part: 'Select Part',
+    laces: 'Laces',
+    outside_1: 'Outside 1',
+    outside_2: 'Outside 2',
+    outside_3: 'Outside 3',
+    inside: 'Inside',
+    sole_bottom: 'Sole Bottom',
+    sole_top: 'Sole Top'
+};
 
 // Load GLTF/GLB model
 gltfLoader.load('/models/shoe.glb', (gltf) => {
@@ -285,6 +297,68 @@ document.querySelectorAll('.configurator-option button').forEach(button => {
     });
 });
 
+// Function to show notification
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 3000); // Remove notification after 3 seconds
+}
+
+// Event listeners for color items
+document.querySelectorAll('.color-item').forEach(item => {
+    item.addEventListener('click', () => {
+        if (parts[currentPartIndex] === 'select_part') {
+            showNotification('Psst! Select a part first.');
+            return;
+        }
+        const color = item.getAttribute('data-color');
+        const partName = parts[currentPartIndex];
+        selectedColors[partName] = color; // Store the selected color
+        if (shoeModel) {
+            shoeModel.traverse((child) => {
+                if (child.isMesh && child.name === partName) {
+                    child.material.color.set(color);
+                }
+            });
+        }
+        document.querySelectorAll('.color-item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+    });
+});
+
+// Event listeners for fabric items
+document.querySelectorAll('.fabric-item').forEach(item => {
+    item.addEventListener('click', () => {
+        if (parts[currentPartIndex] === 'select_part') {
+            showNotification('Psst! Select a part first.');
+            return;
+        }
+        const fabric = item.getAttribute('data-fabric');
+        const partName = parts[currentPartIndex];
+        if (shoeModel) {
+            shoeModel.traverse((child) => {
+                if (child.isMesh && child.name === partName) {
+                    if (fabric === 'none') {
+                        child.material.map = null; // Remove the texture
+                    } else {
+                        const fabricTexture = textureLoader.load(`/public/models/images/fabric/${fabric}.jpg`);
+                        child.material.map = fabricTexture;
+                    }
+                    child.material.color.set(selectedColors[partName] || 0xffffff); // Reapply the selected color or default to white
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+        document.querySelectorAll('.fabric-item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+    });
+});
+
 // Event listeners for color items
 document.querySelectorAll('.color-item').forEach(item => {
     item.addEventListener('click', () => {
@@ -353,6 +427,7 @@ document.getElementById('randomizer-button').addEventListener('click', () => {
     });
 });
 
+
 // Event listeners for part selector
 document.getElementById('prev-part-button').addEventListener('click', () => {
     currentPartIndex = (currentPartIndex - 1 + parts.length) % parts.length;
@@ -407,7 +482,8 @@ function onClick(event) {
 // Function to select a part and update the UI
 function selectPart(partName) {
     const partNameElement = document.getElementById('part-name');
-    partNameElement.textContent = partName.toUpperCase();
+    const displayName = partDisplayNames[partName] || partName;
+    partNameElement.textContent = displayName.toUpperCase(); // Update the part name in the UI to caps
 
     // Update the color and fabric options based on the selected part
     updateColorPalette(partName);
