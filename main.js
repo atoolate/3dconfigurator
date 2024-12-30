@@ -42,7 +42,7 @@ const sphereMaterial = new THREE.MeshBasicMaterial({
     map: environmentMap,
     color: 0x00ff00, // Green color
     transparent: true,
-    opacity: 0.4 // Adjust opacity as needed
+    opacity: 0.35 // Adjust opacity as needed
 });
 
 // Add smoke to the scene
@@ -472,9 +472,14 @@ function changeColor(partName, color) {
 function changeFabric(partName, fabricName) {
     const part = shoeModel.getObjectByName(partName);
     if (part && part.material) {
-        const textureLoader = new THREE.TextureLoader();
-        const texture = textureLoader.load(`/public/models/images/fabric/${fabricName}.jpg`);
-        part.material.map = texture;
+        if (fabricName === 'none') {
+            part.material.map = null; // Remove the texture
+
+        } else {
+            const textureLoader = new THREE.TextureLoader();
+            const texture = textureLoader.load(`/public/models/images/fabric/${fabricName}.jpg`);
+            part.material.map = texture;
+        }
         part.material.needsUpdate = true;
     }
 }
