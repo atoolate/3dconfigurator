@@ -4,7 +4,6 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'; // Impo
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui'; // Import dat.GUI
 import gsap from 'gsap'; // Import gsap
-
 // Scene setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -473,6 +472,8 @@ function onMouseMove(event) {
 // Add this code after the existing mousemove event listener
 window.addEventListener('click', onClick);
 
+let currentPartName = parts[currentPartIndex]; // Initialize with the first part
+
 function onClick(event) {
     // Update the raycaster with the current mouse position
     raycaster.setFromCamera(mouse, camera);
@@ -482,8 +483,8 @@ function onClick(event) {
 
     if (intersects.length > 0) {
         const intersectedPart = intersects[0].object.name;
-        zoomToPart(intersectedPart);
         selectPart(intersectedPart);
+        zoomToPart(intersectedPart);
     }
 }
 
@@ -492,6 +493,10 @@ function selectPart(partName) {
     const partNameElement = document.getElementById('part-name');
     const displayName = partDisplayNames[partName] || partName;
     partNameElement.textContent = displayName.toUpperCase(); // Update the part name in the UI to caps
+
+    // Update the currentPartIndex and currentPartName based on the selected part
+    currentPartIndex = parts.indexOf(partName);
+    currentPartName = partName;
 
     // Update the color and fabric options based on the selected part
     updateColorPalette(partName);
@@ -558,7 +563,6 @@ function changeFabric(partName, fabricName) {
     if (part && part.material) {
         if (fabricName === 'none') {
             part.material.map = null; // Remove the texture
-
         } else {
             const textureLoader = new THREE.TextureLoader();
             const texture = textureLoader.load(`/public/models/images/fabric/${fabricName}.jpg`);
@@ -613,3 +617,66 @@ function zoomToPart(partName) {
 
 // Start animation loop
 renderer.setAnimationLoop(animate);
+
+// Event listeners for part selector buttons
+document.getElementById('prev-part-button').addEventListener('click', () => {
+    currentPartIndex = (currentPartIndex - 1 + parts.length) % parts.length;
+    currentPartName = parts[currentPartIndex];
+    selectPart(currentPartName);
+    zoomToPart(currentPartName);
+});
+
+document.getElementById('next-part-button').addEventListener('click', () => {
+    currentPartIndex = (currentPartIndex + 1) % parts.length;
+    currentPartName = parts[currentPartIndex];
+    selectPart(currentPartName);
+    zoomToPart(currentPartName);
+});
+
+// Event listeners for color items
+document.querySelectorAll('.color-item').forEach(item => {
+    item.addEventListener('click', () => {
+        if (currentPartName === 'select_part') {
+            showNotification('Psst! Select a part first.');
+            return;
+        }
+        const color = item.getAttribute('data-color');
+        selectedColors[currentPartName] = color; // Store the selected color
+        if (shoeModel) {
+            shoeModel.traverse((child) => {
+                if (child.name === currentPartName) {
+                    child.material.color.set(color);
+                }
+            });
+        }
+        document.querySelectorAll('.color-item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+    });
+});
+
+// Event listeners for fabric items
+document.querySelectorAll('.fabric-item').forEach(item => {
+    item.addEventListener('click', () => {
+        if (currentPartName === 'select_part') {
+            showNotification('Psst! Select a part first.');
+            return;
+        }
+        const fabric = item.getAttribute('data-fabric');
+        if (shoeModel) {
+            shoeModel.traverse((child) => {
+                if (child.name === currentPartName) {
+                    if (fabric === 'none') {
+                        child.material.map = null; // Remove the texture
+                    } else {
+                        const textureLoader = new THREE.TextureLoader();
+                        const fabricTexture = textureLoader.load(`/public/models/images/fabric/${fabric}.jpg`);
+                        child.material.map = fabricTexture;
+                    }
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+        document.querySelectorAll('.fabric-item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+    });
+});
