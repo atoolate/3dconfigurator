@@ -298,15 +298,23 @@ document.querySelectorAll('.configurator-option button').forEach(button => {
 });
 
 // Function to show notification
+let notificationTimeout;
+
 function showNotification(message) {
+    // Check if a notification is already displayed
+    if (document.querySelector('.notification')) {
+        return;
+    }
+
     const notification = document.createElement('div');
     notification.className = 'notification';
     notification.textContent = message;
     document.body.appendChild(notification);
 
-    setTimeout(() => {
+    notificationTimeout = setTimeout(() => {
         notification.remove();
-    }, 3000); // Remove notification after 3 seconds
+        notificationTimeout = null;
+    }, 2000); // Remove notification after 2 seconds
 }
 
 // Event listeners for color items
