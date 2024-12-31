@@ -132,6 +132,7 @@ let currentPartIndex = 0;
 
 // Store selected colors for each part
 const selectedColors = {};
+const selectedFabrics = {}; // Add this line
 
 // Define camera positions and targets for each part
 const cameraPositions = {
@@ -481,6 +482,56 @@ function selectPart(partName) {
     // Update the color and fabric options based on the selected part
     updateColorPalette(partName);
     updateFabricPalette(partName);
+
+    // Highlight the selected color and fabric for the selected part
+    highlightSelectedColorAndFabric(partName);
+}
+
+// Function to highlight the selected color and fabric for the selected part
+function highlightSelectedColorAndFabric(partName) {
+    const selectedColor = selectedColors[partName];
+    const selectedFabric = selectedFabrics[partName];
+
+    document.querySelectorAll('.color-item').forEach(item => {
+        item.classList.remove('selected');
+        if (item.getAttribute('data-color') === selectedColor) {
+            item.classList.add('selected');
+        }
+    });
+
+    document.querySelectorAll('.fabric-item').forEach(item => {
+        item.classList.remove('selected');
+        if (item.getAttribute('data-fabric') === selectedFabric) {
+            item.classList.add('selected');
+        }
+    });
+}
+
+// Function to change the color of the selected part
+function changeColor(partName, color) {
+    const part = shoeModel.getObjectByName(partName);
+    if (part && part.material) {
+        part.material.color.set(color);
+        selectedColors[partName] = color; // Store the selected color
+        highlightSelectedColorAndFabric(partName); // Highlight the selected color
+    }
+}
+
+// Function to change the fabric of the selected part
+function changeFabric(partName, fabricName) {
+    const part = shoeModel.getObjectByName(partName);
+    if (part && part.material) {
+        if (fabricName === 'none') {
+            part.material.map = null; // Remove the texture
+        } else {
+            const textureLoader = new THREE.TextureLoader();
+            const texture = textureLoader.load(`/public/models/images/fabric/${fabricName}.jpg`);
+            part.material.map = texture;
+        }
+        part.material.needsUpdate = true;
+        selectedFabrics[partName] = fabricName; // Store the selected fabric
+        highlightSelectedColorAndFabric(partName); // Highlight the selected fabric
+    }
 }
 
 // Function to update the color palette based on the selected part
@@ -527,29 +578,6 @@ function updateFabricPalette(partName) {
         fabricItem.addEventListener('click', () => changeFabric(partName, fabric.name));
         fabricPalette.appendChild(fabricItem);
     });
-}
-
-// Function to change the color of the selected part
-function changeColor(partName, color) {
-    const part = shoeModel.getObjectByName(partName);
-    if (part && part.material) {
-        part.material.color.set(color);
-    }
-}
-
-// Function to change the fabric of the selected part
-function changeFabric(partName, fabricName) {
-    const part = shoeModel.getObjectByName(partName);
-    if (part && part.material) {
-        if (fabricName === 'none') {
-            part.material.map = null; // Remove the texture
-        } else {
-            const textureLoader = new THREE.TextureLoader();
-            const texture = textureLoader.load(`/public/models/images/fabric/${fabricName}.jpg`);
-            part.material.map = texture;
-        }
-        part.material.needsUpdate = true;
-    }
 }
 
 // Update the animate function to ensure only one part is highlighted at a time
