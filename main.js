@@ -183,12 +183,6 @@ gltfLoader.load('/models/shoe.glb', (gltf) => {
     initGUI();
 });
 
-// Load environment model
-gltfLoader.load('/models/environment.glb', (gltf) => {
-    const environment = gltf.scene;
-    scene.add(environment);
-});
-
 // Load and set the environment map as the scene background
 const loader = new THREE.TextureLoader();
 loader.load('/path/to/env-map.jpg', (texture) => {
