@@ -435,26 +435,6 @@ document.getElementById('randomizer-button').addEventListener('click', () => {
 });
 
 
-// Event listeners for part selector
-document.getElementById('prev-part-button').addEventListener('click', () => {
-    currentPartIndex = (currentPartIndex - 1 + parts.length) % parts.length;
-    updatePartSelector();
-});
-
-// Event listeners for part selector
-document.getElementById('next-part-button').addEventListener('click', () => {
-    currentPartIndex = (currentPartIndex + 1) % parts.length;
-    updatePartSelector();
-});
-
-// Update part selector
-function updatePartSelector() {
-    const partName = parts[currentPartIndex];
-    document.getElementById('part-name').textContent = partName.replace('_', ' ').toUpperCase();
-    console.log('Selected part:', partName); // Debugging: log selected part
-    zoomToPart(partName);
-}
-
 // Raycaster setup
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
