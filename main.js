@@ -132,7 +132,13 @@ let currentPartIndex = 0;
 
 // Store selected colors for each part
 const selectedColors = {};
-const selectedFabrics = {}; // Add this line
+const selectedFabrics = {};
+
+// Initialize default values
+parts.forEach(partName => {
+    selectedColors[partName] = '#ffffff'; // Default color is white
+    selectedFabrics[partName] = 'none'; // No fabric selected
+});
 
 // Define camera positions and targets for each part
 const cameraPositions = {
@@ -303,9 +309,9 @@ const fabricTextures = {
         normal: 'public/models/images/fabric/leather/Leather030_1K-JPG_NormalGL.jpg',
     },
     'denim': {
-        color: 'public/models/images/fabric/denim/Fabric069_1K-JPG_NormalGL.jpg',
+        color: 'public/models/images/fabric/denim/Fabric069_1K-JPG_Color.jpg',
         roughness: 'public/models/images/fabric/denim/Fabric069_1K-JPG_Roughness.jpg',
-        normal: 'public/models/images/fabric/denim/Fabric069_1K-JPG_Color.jpg'
+        normal: 'public/models/images/fabric/denim/Fabric069_1K-JPG_NormalGL.jpg'
     },
     'vegan-leather': {
         color: '/public/models/images/fabric/vegan-leather/Leather008_2K-JPG_Color.jpg',
@@ -531,8 +537,23 @@ function highlightSelectedColorAndFabric(partName) {
 function changeColor(partName, color) {
     const part = shoeModel.getObjectByName(partName);
     if (part && part.material) {
-        part.material.color.set(color);
+        part.material.color.set(color); // Set the base color
         selectedColors[partName] = color; // Store the selected color
+
+        if (selectedFabrics[partName] && selectedFabrics[partName] !== 'none') {
+            const fabricTexture = fabricTextures[selectedFabrics[partName]];
+            const textureLoader = new THREE.TextureLoader();
+
+            // Load textures
+            part.material.map = textureLoader.load(fabricTexture.color);
+            part.material.roughnessMap = textureLoader.load(fabricTexture.roughness);
+            part.material.normalMap = textureLoader.load(fabricTexture.normal);
+
+            // Blend base color with texture
+            part.material.color.set(color).multiplyScalar(0.8); // Adjust brightness if needed
+        }
+
+        part.material.needsUpdate = true;
         highlightSelectedColorAndFabric(partName); // Highlight the selected color
     }
 }
@@ -541,22 +562,31 @@ function changeColor(partName, color) {
 function changeFabric(partName, fabricName) {
     const part = shoeModel.getObjectByName(partName);
     if (part && part.material) {
+        const textureLoader = new THREE.TextureLoader();
+
         if (fabricName === 'none') {
-            part.material.map = null; // Remove the texture
+            part.material.map = null; // Remove textures
             part.material.roughnessMap = null;
             part.material.normalMap = null;
+
+            // Ensure base color is visible
+            part.material.color.set(selectedColors[partName] || '#ffffff');
         } else {
-            const textures = fabricTextures[fabricName];
-            const textureLoader = new THREE.TextureLoader();
+            const fabricTexture = fabricTextures[fabricName];
 
-            const colorTexture = textureLoader.load(textures.color);
-            const roughnessTexture = textureLoader.load(textures.roughness);
-            const normalTexture = textureLoader.load(textures.normal);
+            // Load textures
+            const colorMap = textureLoader.load(fabricTexture.color);
+            const roughnessMap = textureLoader.load(fabricTexture.roughness);
+            const normalMap = textureLoader.load(fabricTexture.normal);
 
-            part.material.map = colorTexture;
-            part.material.roughnessMap = roughnessTexture;
-            part.material.normalMap = normalTexture;
+            part.material.map = colorMap;
+            part.material.roughnessMap = roughnessMap;
+            part.material.normalMap = normalMap;
+
+            // Blend base color with texture
+            part.material.color.set(selectedColors[partName] || '#ffffff').multiplyScalar(0.8);
         }
+
         part.material.needsUpdate = true;
         selectedFabrics[partName] = fabricName; // Store the selected fabric
         highlightSelectedColorAndFabric(partName); // Highlight the selected fabric
@@ -734,12 +764,23 @@ document.getElementById('randomizer-button').addEventListener('click', () => {
         if (shoeModel) {
             shoeModel.traverse((child) => {
                 if (child.isMesh && child.name === partName) {
-                    child.material.color.set(randomColor);
+                    const textureLoader = new THREE.TextureLoader();
                     if (randomFabric === 'none') {
                         child.material.map = null; // Remove the texture
+                        child.material.roughnessMap = null;
+                        child.material.normalMap = null;
+                        child.material.color.set(randomColor); // Set the random color
                     } else {
-                        const fabricTexture = textureLoader.load(`/public/models/images/fabric/${randomFabric}.jpg`);
-                        child.material.map = fabricTexture;
+                        const fabricTexture = fabricTextures[randomFabric];
+                        child.material.map = textureLoader.load(fabricTexture.color);
+                        child.material.roughnessMap = textureLoader.load(fabricTexture.roughness);
+                        child.material.normalMap = textureLoader.load(fabricTexture.normal);
+                        child.material.color.set('#ffffff'); // Ensure the base color is white
+
+                        // Reapply the selected color
+                        if (randomColor !== '#ffffff') {
+                            child.material.color.set(randomColor);
+                        }
                     }
                     child.material.needsUpdate = true;
                 }
@@ -750,4 +791,3 @@ document.getElementById('randomizer-button').addEventListener('click', () => {
     // Highlight the selected color and fabric for the current part
     highlightSelectedColorAndFabric(currentPartName);
 });
-
