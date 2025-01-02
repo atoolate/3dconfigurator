@@ -393,7 +393,6 @@ document.querySelectorAll('.fabric-item').forEach(item => {
                         const fabricTexture = textureLoader.load(`/public/models/images/fabric/${fabric}.jpg`);
                         child.material.map = fabricTexture;
                     }
-                    child.material.color.set(selectedColors[partName] || 0xffffff); // Reapply the selected color or default to white
                     child.material.needsUpdate = true;
                 }
             });
@@ -414,21 +413,28 @@ document.getElementById('randomizer-button').addEventListener('click', () => {
         // Randomly select a fabric
         const randomFabricItem = document.querySelectorAll('.fabric-item')[Math.floor(Math.random() * document.querySelectorAll('.fabric-item').length)];
         const randomFabric = randomFabricItem.getAttribute('data-fabric');
-        const fabricTexture = textureLoader.load(`/public/models/images/fabric/${randomFabric}.jpg`);
+        selectedFabrics[partName] = randomFabric;
 
         // Apply random color and fabric to the part
         if (shoeModel) {
             shoeModel.traverse((child) => {
                 if (child.isMesh && child.name === partName) {
                     child.material.color.set(randomColor);
-                    child.material.map = fabricTexture;
+                    if (randomFabric === 'none') {
+                        child.material.map = null; // Remove the texture
+                    } else {
+                        const fabricTexture = textureLoader.load(`/public/models/images/fabric/${randomFabric}.jpg`);
+                        child.material.map = fabricTexture;
+                    }
                     child.material.needsUpdate = true;
                 }
             });
         }
     });
-});
 
+    // Highlight the selected color and fabric for the current part
+    highlightSelectedColorAndFabric(currentPartName);
+});
 
 // Raycaster setup
 const raycaster = new THREE.Raycaster();
@@ -681,4 +687,38 @@ document.querySelectorAll('.fabric-item').forEach(item => {
         document.querySelectorAll('.fabric-item').forEach(i => i.classList.remove('selected'));
         item.classList.add('selected');
     });
+});
+
+// Event listener for randomizer button
+document.getElementById('randomizer-button').addEventListener('click', () => {
+    parts.forEach(partName => {
+        // Randomly select a color
+        const randomColorItem = document.querySelectorAll('.color-item')[Math.floor(Math.random() * document.querySelectorAll('.color-item').length)];
+        const randomColor = randomColorItem.getAttribute('data-color');
+        selectedColors[partName] = randomColor;
+
+        // Randomly select a fabric
+        const randomFabricItem = document.querySelectorAll('.fabric-item')[Math.floor(Math.random() * document.querySelectorAll('.fabric-item').length)];
+        const randomFabric = randomFabricItem.getAttribute('data-fabric');
+        selectedFabrics[partName] = randomFabric;
+
+        // Apply random color and fabric to the part
+        if (shoeModel) {
+            shoeModel.traverse((child) => {
+                if (child.isMesh && child.name === partName) {
+                    child.material.color.set(randomColor);
+                    if (randomFabric === 'none') {
+                        child.material.map = null; // Remove the texture
+                    } else {
+                        const fabricTexture = textureLoader.load(`/public/models/images/fabric/${randomFabric}.jpg`);
+                        child.material.map = fabricTexture;
+                    }
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+    });
+
+    // Highlight the selected color and fabric for the current part
+    highlightSelectedColorAndFabric(currentPartName);
 });
