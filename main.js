@@ -321,6 +321,10 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.25;
 controls.screenSpacePanning = false;
+controls.enableZoom = true;
+controls.minDistance = 3; // Minimum zoom distance
+controls.maxDistance = 10; // Maximum zoom distance
+
 
 // GUI controls for shoe model and camera
 
