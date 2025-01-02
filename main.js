@@ -378,7 +378,7 @@ addInitialsButton.addEventListener('click', () => {
     if (initials) {
         addInitialsTotextArea(initials);
     } else {
-        alert('Please enter your initials.');
+        alert('Please enter your Engraving of choice.');
     }
 });
 
