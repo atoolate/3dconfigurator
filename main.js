@@ -291,8 +291,28 @@ document.querySelectorAll('.configurator-option button').forEach(button => {
     });
 });
 
-// Function to show notification
-let notificationTimeout;
+const fabricTextures = {
+    'corduroy': {
+        color: '/public/models/images/fabric/corduroy/Fabric022_2K-JPG_Color.jpg',
+        roughness: 'public/models/images/fabric/corduroy/Fabric022_2K-JPG_Roughness.jpg',
+        normal: 'public/models/images/fabric/corduroy/Fabric022_2K-JPG_NormalGL.jpg'
+    },
+    'leather': {
+        color: 'public/models/images/fabric/leather/Leather030_1K-JPG_Color.jpg',
+        roughness: 'public/models/images/fabric/leather/Leather030_1K-JPG_Roughness.jpg',
+        normal: 'public/models/images/fabric/leather/Leather030_1K-JPG_NormalGL.jpg',
+    },
+    'denim': {
+        color: 'public/models/images/fabric/denim/Fabric069_1K-JPG_NormalGL.jpg',
+        roughness: 'public/models/images/fabric/denim/Fabric069_1K-JPG_Roughness.jpg',
+        normal: 'public/models/images/fabric/denim/Fabric069_1K-JPG_Color.jpg'
+    },
+    'vegan-leather': {
+        color: '/public/models/images/fabric/vegan-leather/Leather008_2K-JPG_Color.jpg',
+        roughness: '/public/models/images/fabric/vegan-leather/Leather008_2K-JPG_Roughness.jpg',
+        normal: '/public/models/images/fabric/vegan-leather/Leather008_2K-JPG_NormalGL.jpg'
+    }
+};
 
 function showNotification(message) {
     // Check if a notification is already displayed
@@ -523,10 +543,19 @@ function changeFabric(partName, fabricName) {
     if (part && part.material) {
         if (fabricName === 'none') {
             part.material.map = null; // Remove the texture
+            part.material.roughnessMap = null;
+            part.material.normalMap = null;
         } else {
+            const textures = fabricTextures[fabricName];
             const textureLoader = new THREE.TextureLoader();
-            const texture = textureLoader.load(`/public/models/images/fabric/${fabricName}.jpg`);
-            part.material.map = texture;
+
+            const colorTexture = textureLoader.load(textures.color);
+            const roughnessTexture = textureLoader.load(textures.roughness);
+            const normalTexture = textureLoader.load(textures.normal);
+
+            part.material.map = colorTexture;
+            part.material.roughnessMap = roughnessTexture;
+            part.material.normalMap = normalTexture;
         }
         part.material.needsUpdate = true;
         selectedFabrics[partName] = fabricName; // Store the selected fabric
@@ -554,18 +583,17 @@ function updateColorPalette(partName) {
 
 // Function to update the fabric palette based on the selected part
 function updateFabricPalette(partName) {
-    // Example implementation: update the fabric palette UI
     const fabricPalette = document.querySelector('.fabric-palette');
     fabricPalette.innerHTML = ''; // Clear existing fabrics
 
-    // Add new fabrics for the selected part (example fabrics)
     const fabrics = [
         { name: 'none', image: '', color: '#cccccc' },
-        { name: 'dirty_carpet_diff_4k', image: '/public/models/images/fabric/dirty_carpet_diff_4k.jpg' },
-        { name: 'leather', image: '/public/models/images/fabric/leather.jpg' },
-        { name: 'denim', image: '/public/models/images/fabric/denim.jpg' },
-        { name: 'vegan-leather', image: '/public/models/images/fabric/Leather008_2K-JPG_Color.jpg' }
+        { name: 'corduroy', image: fabricTextures['corduroy'].color },
+        { name: 'leather', image: fabricTextures['leather'].color },
+        { name: 'denim', image: fabricTextures['denim'].color },
+        { name: 'vegan-leather', image: fabricTextures['vegan-leather'].color }
     ];
+
     fabrics.forEach(fabric => {
         const fabricItem = document.createElement('div');
         fabricItem.className = 'fabric-item';
@@ -722,3 +750,4 @@ document.getElementById('randomizer-button').addEventListener('click', () => {
     // Highlight the selected color and fabric for the current part
     highlightSelectedColorAndFabric(currentPartName);
 });
+
