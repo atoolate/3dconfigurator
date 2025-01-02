@@ -386,8 +386,10 @@ addInitialsButton.addEventListener('click', () => {
 // Event listeners for buttons in .configurator-option
 document.querySelectorAll('.configurator-option button').forEach(button => {
     button.addEventListener('click', (event) => {
-        document.querySelectorAll('.configurator-option button').forEach(btn => btn.classList.remove('selected'));
-        event.target.classList.add('selected');
+        if (event.target.id !== 'randomizer-button') {
+            document.querySelectorAll('.configurator-option button').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
 
         if (event.target.id === 'color-button') {
             document.querySelector('.color-palette').style.display = 'flex';
