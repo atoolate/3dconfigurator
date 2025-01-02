@@ -433,6 +433,7 @@ const fabricTextures = {
         normal: '/public/models/images/fabric/vegan-leather/Leather008_2K-JPG_NormalGL.jpg'
     }
 };
+let notificationTimeout;
 
 function showNotification(message) {
     // Check if a notification is already displayed

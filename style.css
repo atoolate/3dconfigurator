@@ -4,7 +4,6 @@ body {
     height: 100vh;
     margin: 0;
     overflow: hidden;
-    /* Prevent scrolling */
     font-family: Helvetica, sans-serif;
 }
 
@@ -91,7 +90,11 @@ h2 {
 }
 
 .configurator-container {
-    height: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 .parts-buttons {
@@ -112,14 +115,18 @@ h2 {
     font-weight: bold;
     position: absolute;
     justify-content: center;
-    top: 75%;
-    left: 30%;
+    align-items: center;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 1;
 }
 
 .configurator-option {
     display: flex;
     gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .configurator-option button {
@@ -145,7 +152,7 @@ h2 {
     justify-content: space-between;
     width: 100%;
     background-color: #000000;
-    min-width: 602px;
+    min-width: 300px;
 }
 
 .part-selector button {
@@ -261,7 +268,6 @@ h2 {
     height: 100%;
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.4);
-    /* Black w/ opacity */
     display: flex;
     justify-content: flex-end;
     transform: translateX(100%);
@@ -342,7 +348,7 @@ h3 {
     text-transform: uppercase;
 }
 
-/* Add this to your existing CSS */
+/* engraving css*/
 .initials-input {
     display: flex;
     align-items: center;
@@ -386,4 +392,109 @@ h3 {
 .initials-input button:hover {
     background: #00ff00;
     color: black;
+}
+
+/* Responsive Styling for Smaller Screens */
+@media (max-width: 768px) {
+    /* Navbar */
+    .navbar {
+        text-align: center;
+        padding: 10px;
+    }
+
+    .logo {
+        width: 25%; /* Adjust logo size */
+    }
+
+    .navbar h2 {
+        font-size: 1rem; /* Adjust heading size */
+        margin: 10px 0;
+    }
+
+    .nav-icons {
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn button {
+        font-size: 12px; /* Adjust button size */
+        padding: 8px 16px;
+    }
+
+    /* Configurator Settings */
+    .configurator-settings {
+        font-size: 0.9rem; /* Slightly reduce font size */
+        padding: 10px;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    .parts-buttons {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 10px;
+    }
+
+    .part-selector {
+        flex-wrap: wrap; /* Allow wrapping for smaller screens */
+        gap: 10px;
+    }
+
+    .part-selector button {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+
+    /* Color Palette */
+    .color-palette, .fabric-palette {
+        gap: 8px; /* Reduce gaps between items */
+    }
+
+    .color-item, .fabric-item {
+        width: 40px;
+        height: 40px; /* Smaller size for touch devices */
+    }
+
+    /* Initials Input */
+    .initials-input {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .initials-input input {
+        width: 100%; /* Expand input to fill available space */
+        font-size: 12px;
+    }
+
+    .initials-input button {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Further adjustments for very small screens */
+    .navbar h2 {
+        font-size: 0.9rem;
+    }
+
+    .btn button {
+        padding: 6px 12px;
+    }
+
+    .parts-buttons {
+        gap: 8px;
+    }
+
+    .configurator-option button {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .color-item, .fabric-item {
+        width: 35px;
+        height: 35px;
+    }
 }
