@@ -205,51 +205,7 @@ controls.dampingFactor = 0.25;
 controls.screenSpacePanning = false;
 
 // GUI controls for shoe model and camera
-function initGUI() {
-    if (!shoeModel) return; // Ensure shoeModel is loaded before initializing GUI
 
-    const gui = new dat.GUI();
-    const shoeFolder = gui.addFolder('Shoe Model');
-    const shoeMaterial = { color: 0xffffff, roughness: 0.5, metalness: 0.5 };
-
-    // Add controls to change color
-    shoeFolder.addColor(shoeMaterial, 'color').onChange((color) => {
-        if (shoeModel) {
-            shoeModel.traverse((child) => {
-                if (child.isMesh) {
-                    child.material.color.set(color);
-                }
-            });
-        }
-    });
-
-    // Add controls to change roughness and metalness
-    shoeFolder.add(shoeMaterial, 'roughness', 0, 1).onChange((value) => {
-        if (shoeModel) {
-            shoeModel.traverse((child) => {
-                if (child.isMesh) {
-                    child.material.roughness = value;
-                }
-            });
-        }
-    });
-
-    shoeFolder.add(shoeMaterial, 'metalness', 0, 1).onChange((value) => {
-        if (shoeModel) {
-            shoeModel.traverse((child) => {
-                if (child.isMesh) {
-                    child.material.metalness = value;
-                }
-            });
-        }
-    });
-
-    // Add controls to change shoe position
-    shoeFolder.add(shoeModel.position, 'x', -10, 10).name('Position X');
-    shoeFolder.add(shoeModel.position, 'y', -10, 10).name('Position Y');
-    shoeFolder.add(shoeModel.position, 'z', -10, 10).name('Position Z');
-
-    shoeFolder.open();
 
     // Create a showcase platform
     const platformGeometry = new THREE.CylinderGeometry(4, 5, 5, 32);
@@ -269,14 +225,6 @@ function initGUI() {
     logoMesh.receiveShadow = true; // Enable shadows for the logo
     scene.add(logoMesh);
     
-
-    // Add controls to change camera position
-    const cameraFolder = gui.addFolder('Camera');
-    cameraFolder.add(camera.position, 'x', -10, 10).name('Camera X');
-    cameraFolder.add(camera.position, 'y', -10, 10).name('Camera Y');
-    cameraFolder.add(camera.position, 'z', -10, 10).name('Camera Z');
-    cameraFolder.open();
-}
 
 // Event listeners for buttons in .configurator-option
 document.querySelectorAll('.configurator-option button').forEach(button => {
