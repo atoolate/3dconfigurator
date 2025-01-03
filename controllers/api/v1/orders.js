@@ -31,12 +31,12 @@ const getOrderById = async (req, res) => {
 
 // POST
 const createOrder = async (req, res) => {
-    const { shoeName, user, shoeConfig } = req.body;
     const order = new Order({
-        shoeName,
-        user,
-        shoeConfig
+        shoeName: req.body.shoeName,
+        user: req.body.user,
+        shoeConfig: req.body.shoeConfig
     });
+
     try {
         await order.save();
         console.log("Order created");
