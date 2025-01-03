@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const ordersRouter = require('./routers/api/v1/orders');
+const usersRouter = require('./routers/api/v1/users');
 
 // MongoDB connection
 const mongoose = require('mongoose');
@@ -11,6 +12,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/v1/orders', ordersRouter);
+app.use('/api/v1/users', usersRouter);
 
 // Default route
 app.get('/', (req, res) => {
