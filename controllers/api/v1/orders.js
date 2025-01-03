@@ -17,12 +17,16 @@ const getAllOrders = async (req, res) => {
 };
 
 // /api/v1/orders/:id
-const getOrderById = (req, res) => {
-    const order = orders.find(order => order.id === parseInt(req.params.id));
-    if (!order) {
-        return res.status(404).send('The order with the given ID was not found');
+const getOrderById = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+        if (!order) {
+            return res.status(404).send('The order with the given ID was not found');
+        }
+        return res.send(order);
+    } catch (err) {
+        res.status(500).send('Error getting order');
     }
-    return res.send(order);
 };
 
 // POST
@@ -43,16 +47,30 @@ const createOrder = async (req, res) => {
 };
 
 // PUT
-const updateOrder = (req, res) =>{
-    // Look up the order
-    res.send("Order updated");
+const updateOrder = async (req, res) => {
+    try {
+        const order = await Order.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!order) {
+            return res.status(404).send('The order with the given ID was not found');
+        }
+        res.send(order);
+    } catch (err) {
+        res.status(500).send('Error updating order');
+    }
 };
 
 // DELETE
-const deleteOrder = (req, res) => {
-    res.send("Order deleted");
+const deleteOrder = async (req, res) => {
+    try {
+        const order = await Order.findByIdAndDelete(req.params.id);
+        if (!order) {
+            return res.status(404).send('The order with the given ID was not found');
+        }
+        res.send('Order deleted');
+    } catch (err) {
+        res.status(500).send('Error deleting order');
+    }
 };
-
 
 module.exports.getAllOrders = getAllOrders;
 module.exports.getOrderById = getOrderById;

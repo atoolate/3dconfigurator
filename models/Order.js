@@ -12,7 +12,6 @@ const orderSchema = new Schema({
                 color: String,
                 texture: String
             },
-            // Add more parts as needed
             outside_1: {
                 color: String,
                 texture: String
