@@ -19,8 +19,7 @@
         </div>
         <div class="nav-icons">
             <div class="btn">
-                <button>ORDER</button>
-
+                <button id="order-button">ORDER</button>
             </div>
         </div>
     </nav>
@@ -41,6 +40,7 @@
             <div class="configurator-option">
                 <button id="color-button">Select Color</button>
                 <button id="fabric-button">Select Fabric</button>
+                <button id="initials-button">Engraving</button>
                 <button id="randomizer-button"><i class="fas fa-random"></i> Randomizer</button>
             </div>
         </div>
@@ -74,6 +74,14 @@
             <div class="fabric-item"
                 style="background-image: url('/public/models/images/fabric/vegan-leather/Leather008_2K-JPG_Color.jpg');"
                 data-fabric="vegan-leather"></div>
+        </div>
+        <!-- Initials Input -->
+        <div class="initials-input" style="display: none;">
+            <div class="initials-input-group">
+                <label for="initials">Enter Engraving:</label>
+                <input type="text" id="initials" maxlength="3">
+            </div>
+            <button id="add-initials-button">Engrave</button>
         </div>
     </div>
     <!-- Size Selection Modal -->
@@ -111,14 +119,14 @@
         orderButton.addEventListener('click', () => {
             modal.classList.add('open');
             configuratorContainer.classList.add(
-            'disable-pointer-events'); // Disable pointer events on the 3D model
+                'disable-pointer-events'); // Disable pointer events on the 3D model
         });
 
         // When the user clicks on <span> (x), close the modal
         closeButton.addEventListener('click', () => {
             modal.classList.remove('open');
             configuratorContainer.classList.remove(
-            'disable-pointer-events'); // Enable pointer events on the 3D model
+                'disable-pointer-events'); // Enable pointer events on the 3D model
         });
 
         // When the user clicks anywhere outside of the modal, close it
@@ -126,7 +134,7 @@
             if (event.target === modal) {
                 modal.classList.remove('open');
                 configuratorContainer.classList.remove(
-                'disable-pointer-events'); // Enable pointer events on the 3D model
+                    'disable-pointer-events'); // Enable pointer events on the 3D model
             }
         });
 
@@ -146,7 +154,7 @@
                 // Add any additional logic for confirming the size here
                 modal.classList.remove('open');
                 configuratorContainer.classList.remove(
-                'disable-pointer-events'); // Enable pointer events on the 3D model
+                    'disable-pointer-events'); // Enable pointer events on the 3D model
             } else {
                 alert('Selecteer een maat.');
             }

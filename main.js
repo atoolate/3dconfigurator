@@ -1,8 +1,19 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'; // Import DRACOLoader
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import * as dat from 'dat.gui'; // Import dat.GUI
+import {
+    GLTFLoader
+} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {
+    DRACOLoader
+} from 'three/examples/jsm/loaders/DRACOLoader.js'; // Import DRACOLoader
+import {
+    OrbitControls
+} from 'three/examples/jsm/controls/OrbitControls';
+import {
+    FontLoader
+} from 'three/examples/jsm/loaders/FontLoader.js';
+import {
+    TextGeometry
+} from 'three/examples/jsm/geometries/TextGeometry.js';
 import gsap from 'gsap'; // Import gsap
 // Scene setup
 const scene = new THREE.Scene();
@@ -10,7 +21,9 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 camera.position.set(4, 2, 0); // Adjust initial camera position
 
 // Renderer setup
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({
+    antialias: true
+});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.shadowMap.enabled = true; // Enable shadow maps
@@ -22,7 +35,10 @@ container.appendChild(renderer.domElement);
 
 // Update renderer size to fit the container
 function updateRendererSize() {
-    const { clientWidth, clientHeight } = container;
+    const {
+        clientWidth,
+        clientHeight
+    } = container;
     renderer.setSize(clientWidth, clientHeight);
     camera.aspect = clientWidth / clientHeight;
     camera.updateProjectionMatrix();
@@ -37,7 +53,7 @@ const textureLoader = new THREE.TextureLoader();
 const environmentMap = textureLoader.load('models/images/enviroment/metal.jpg');
 
 // Create a material for the sphere with the environment map
-const sphereMaterial = new THREE.MeshBasicMaterial({ 
+const sphereMaterial = new THREE.MeshBasicMaterial({
     map: environmentMap,
     color: 0x00ff00, // Green color
     transparent: true,
@@ -57,11 +73,26 @@ const smokeGeometry = new THREE.PlaneGeometry(10, 10);
 
 // Create multiple smoke meshes around the shoe
 const smokeMeshes = [];
-const smokePositions = [
-    { x: 0, y: 0, z: -5 },
-    { x: 5, y: 5, z: 5 },
-    { x: -5, y: 5, z: 5 },
-    { x: -3.5, y: -5, z: 5 }
+const smokePositions = [{
+        x: 0,
+        y: 0,
+        z: -5
+    },
+    {
+        x: 5,
+        y: 5,
+        z: 5
+    },
+    {
+        x: -5,
+        y: 5,
+        z: 5
+    },
+    {
+        x: -3.5,
+        y: -5,
+        z: 5
+    }
 ];
 
 smokePositions.forEach(pos => {
@@ -127,7 +158,7 @@ gltfLoader.setDRACOLoader(dracoLoader);
 let shoeModel = null;
 
 // Parts of the shoe that can be customized
-const parts = ['select_part','laces', 'outside_1', 'outside_2', 'outside_3', 'inside', 'sole_bottom', 'sole_top'];
+const parts = ['select_part', 'laces', 'outside_1', 'outside_2', 'outside_3', 'inside', 'sole_bottom', 'sole_top'];
 let currentPartIndex = 0;
 
 // Store selected colors for each part
@@ -142,14 +173,102 @@ parts.forEach(partName => {
 
 // Define camera positions and targets for each part
 const cameraPositions = {
-    select_part: { position: { x: 7, y: 2, z: 0 }, target: { x: 0, y: 0, z: 0 } },
-    sole_top: { position: { x: -6, y: 0, z: 2 }, target: { x: 0, y: 0, z: 0 } },
-    outside_1: { position: { x: -6, y: 2, z: 2 }, target: { x: 0, y: 0, z: 0 } },
-    outside_2: { position: { x: 6, y: 2, z: 2 }, target: { x: 0, y: 0, z: 0 } },
-    outside_3: { position: { x: 4.2, y: 3, z: 1 }, target: { x: 0, y: 0, z: 0 } },
-    inside: { position: { x: 1, y: 7.5, z: -0.2 }, target: { x: 0, y: 0, z: 0 } },
-    sole_bottom: { position: { x: 0, y: -3, z: -4 }, target: { x: 0, y: 0, z: 0 } },
-    laces: { position: { x: 0, y: 5, z: 4 }, target: { x: 0, y: 0, z: 0 } } // Adjusted z position for better view
+    select_part: {
+        position: {
+            x: 7,
+            y: 2,
+            z: 0
+        },
+        target: {
+            x: 0,
+            y: 0,
+            z: 0
+        }
+    },
+    sole_top: {
+        position: {
+            x: -6,
+            y: 0,
+            z: 2
+        },
+        target: {
+            x: 0,
+            y: 0,
+            z: 0
+        }
+    },
+    outside_1: {
+        position: {
+            x: -6,
+            y: 2,
+            z: 2
+        },
+        target: {
+            x: 0,
+            y: 0,
+            z: 0
+        }
+    },
+    outside_2: {
+        position: {
+            x: 6,
+            y: 2,
+            z: 2
+        },
+        target: {
+            x: 0,
+            y: 0,
+            z: 0
+        }
+    },
+    outside_3: {
+        position: {
+            x: 4.2,
+            y: 3,
+            z: 1
+        },
+        target: {
+            x: 0,
+            y: 0,
+            z: 0
+        }
+    },
+    inside: {
+        position: {
+            x: 1,
+            y: 7.5,
+            z: -0.2
+        },
+        target: {
+            x: 0,
+            y: 0,
+            z: 0
+        }
+    },
+    sole_bottom: {
+        position: {
+            x: 0,
+            y: -3,
+            z: -4
+        },
+        target: {
+            x: 0,
+            y: 0,
+            z: 0
+        }
+    },
+    laces: {
+        position: {
+            x: 0,
+            y: 5,
+            z: 4
+        },
+        target: {
+            x: 0,
+            y: 0,
+            z: 0
+        }
+    } // Adjusted z position for better view
 };
 
 // Mapping of internal part names to display names
@@ -167,7 +286,7 @@ const partDisplayNames = {
 // Load GLTF/GLB model
 gltfLoader.load('/models/shoe.glb', (gltf) => {
     shoeModel = gltf.scene;
-    
+
     shoeModel.traverse((child) => {
         if (child.isMesh) {
             child.material = new THREE.MeshStandardMaterial({
@@ -184,10 +303,9 @@ gltfLoader.load('/models/shoe.glb', (gltf) => {
     shoeModel.scale.set(12, 12, 12);
 
     scene.add(shoeModel);
-    
-    // Now that the model is loaded, we can initialize the GUI
-    initGUI();
+
 });
+// function add 
 
 // Load and set the environment map as the scene background
 const loader = new THREE.TextureLoader();
@@ -203,42 +321,90 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.25;
 controls.screenSpacePanning = false;
+controls.enableZoom = true;
+controls.minDistance = 3; // Minimum zoom distance
+controls.maxDistance = 10; // Maximum zoom distance
+
 
 // GUI controls for shoe model and camera
 
 
-    // Create a showcase platform
-    const platformGeometry = new THREE.CylinderGeometry(4, 5, 5, 32);
-    const platformMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
-    const platform = new THREE.Mesh(platformGeometry, platformMaterial);
-    platform.position.set(0, -3.5, 0); // Position the platform below the shoe
-    platform.receiveShadow = true; // Enable shadows for the platform
-    scene.add(platform);
+// Create a showcase platform
+const platformGeometry = new THREE.CylinderGeometry(4, 5, 5, 32);
+const platformMaterial = new THREE.MeshStandardMaterial({
+    color: 0x000000
+});
+const platform = new THREE.Mesh(platformGeometry, platformMaterial);
+platform.position.set(0, -3.5, 0); // Position the platform below the shoe
+platform.receiveShadow = true; // Enable shadows for the platform
+scene.add(platform);
 
-    // Add logo on top of the platform
-    const logoTexture = textureLoader.load('/logo/swear-logo-square-white.png'); // Replace with the correct path to your logo image
-    const logoMaterial = new THREE.MeshBasicMaterial({ map: logoTexture, color: 0xffffff, transparent: true });
-    const logoGeometry = new THREE.PlaneGeometry(4, 4); // Adjust size as needed
-    const logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
-    logoMesh.position.set(0, -0.9, 0); // Position the logo above the platform
-    logoMesh.rotation.x = -Math.PI / 2; // Rotate the logo to lay flat on the platform
-    logoMesh.receiveShadow = true; // Enable shadows for the logo
-    scene.add(logoMesh);
-    
+// Add logo on top of the platform
+const logoTexture = textureLoader.load('/logo/swear-logo-square-white.png'); // Replace with the correct path to your logo image
+const logoMaterial = new THREE.MeshBasicMaterial({
+    map: logoTexture,
+    color: 0xffffff,
+    transparent: true
+});
+const logoGeometry = new THREE.PlaneGeometry(4, 4); // Adjust size as needed
+const logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
+logoMesh.position.set(0, -0.9, 0); // Position the logo above the platform
+logoMesh.rotation.x = -Math.PI / 2; // Rotate the logo to lay flat on the platform
+logoMesh.receiveShadow = true; // Enable shadows for the logo
+scene.add(logoMesh);
+
+
+// Event listeners for buttons in .configurator-optioninitials
+// Get the input field and buttons
+const initialsInput = document.getElementById('initials');
+const addInitialsButton = document.getElementById('add-initials-button');
+const initialsButton = document.getElementById('initials-button');
+const initialsInputDiv = document.querySelector('.initials-input');
+
+// Show the initials input div when the "Add Initials" button is clicked
+initialsButton.addEventListener('click', () => {
+    //zoom to ccamera position
+    gsap.to(camera.position, {
+        duration: 1.5,
+        x: 0,
+        y: 1,
+        z: -4,
+        ease: "power2.inOut",
+    });
+    initialsInputDiv.style.display = 'flex';
+    document.querySelector('.color-palette').style.display = 'none';
+    document.querySelector('.fabric-palette').style.display = 'none';
+});
+
+// Add event listener to the "Add Initials" button
+addInitialsButton.addEventListener('click', () => {
+    const initials = initialsInput.value;
+    if (initials) {
+        addInitialsTotextArea(initials);
+    } else {
+        alert('Please enter your Engraving of choice.');
+    }
+});
+
 
 // Event listeners for buttons in .configurator-option
 document.querySelectorAll('.configurator-option button').forEach(button => {
     button.addEventListener('click', (event) => {
-        document.querySelectorAll('.configurator-option button').forEach(btn => btn.classList.remove('selected'));
-        event.target.classList.add('selected');
+        if (event.target.id !== 'randomizer-button') {
+            document.querySelectorAll('.configurator-option button').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
 
         if (event.target.id === 'color-button') {
             document.querySelector('.color-palette').style.display = 'flex';
             document.querySelector('.fabric-palette').style.display = 'none';
+            initialsInputDiv.style.display = 'none';
         } else if (event.target.id === 'fabric-button') {
             document.querySelector('.fabric-palette').style.display = 'flex';
             document.querySelector('.color-palette').style.display = 'none';
-        } else {
+            initialsInputDiv.style.display = 'none';
+        } else if (event.target.id === 'initials-button') {
+            initialsInputDiv.style.display = 'flex';
             document.querySelector('.color-palette').style.display = 'none';
             document.querySelector('.fabric-palette').style.display = 'none';
         }
@@ -267,6 +433,7 @@ const fabricTextures = {
         normal: '/public/models/images/fabric/vegan-leather/Leather008_2K-JPG_NormalGL.jpg'
     }
 };
+let notificationTimeout;
 
 function showNotification(message) {
     // Check if a notification is already displayed
@@ -408,6 +575,8 @@ document.getElementById('randomizer-button').addEventListener('click', () => {
 
     // Highlight the selected color and fabric for the current part
     highlightSelectedColorAndFabric(currentPartName);
+       // Remove the "selected" class from the randomizer button
+       document.getElementById('randomizer-button').classList.remove('selected');
 });
 
 // Raycaster setup
@@ -564,12 +733,27 @@ function updateFabricPalette(partName) {
     const fabricPalette = document.querySelector('.fabric-palette');
     fabricPalette.innerHTML = ''; // Clear existing fabrics
 
-    const fabrics = [
-        { name: 'none', image: '', color: '#cccccc' },
-        { name: 'corduroy', image: fabricTextures['corduroy'].color },
-        { name: 'leather', image: fabricTextures['leather'].color },
-        { name: 'denim', image: fabricTextures['denim'].color },
-        { name: 'vegan-leather', image: fabricTextures['vegan-leather'].color }
+    const fabrics = [{
+            name: 'none',
+            image: '',
+            color: '#cccccc'
+        },
+        {
+            name: 'corduroy',
+            image: fabricTextures['corduroy'].color
+        },
+        {
+            name: 'leather',
+            image: fabricTextures['leather'].color
+        },
+        {
+            name: 'denim',
+            image: fabricTextures['denim'].color
+        },
+        {
+            name: 'vegan-leather',
+            image: fabricTextures['vegan-leather'].color
+        }
     ];
 
     fabrics.forEach(fabric => {
@@ -596,13 +780,13 @@ function animate() {
 
         // Reset all parts to their original color
         shoeModel.traverse((child) => {
-            if (child.isMesh) {
+            if (child.isMesh && child.material.emissive) {
                 child.material.emissive.setHex(0x000000);
             }
         });
 
         // Highlight the first intersected part
-        if (intersects.length > 0) {
+        if (intersects.length > 0 && intersects[0].object.material.emissive) {
             intersects[0].object.material.emissive.setHex(0x00ff00); // Green color with low opacity
             intersects[0].object.material.emissiveIntensity = 0.1; // Lower opacity
         }
@@ -739,3 +923,47 @@ document.getElementById('randomizer-button').addEventListener('click', () => {
     // Highlight the selected color and fabric for the current part
     highlightSelectedColorAndFabric(currentPartName);
 });
+// Function to add initials to the shoe
+function addInitialsTotextArea(text) {
+    const textAreaPart = scene.getObjectByName("sole_bottom");
+    console.log(textAreaPart); // Check if the object is found
+
+    // Remove previous initial placing if it exists
+    const previousInitialPlacing = textAreaPart.getObjectByName("initialPlacingText");
+    if (previousInitialPlacing) {
+        textAreaPart.remove(previousInitialPlacing);
+    }
+
+    const fontLoader = new FontLoader();
+    fontLoader.load(
+        "https://threejs.org/examples/fonts/helvetiker_bold.typeface.json",
+        (font) => {
+            const textGeometry = new TextGeometry(text, {
+                font: font,
+                size: 0.3,
+                height: 0.05,
+                curveSegments: 12
+            });
+            const textMaterial = new THREE.MeshStandardMaterial({
+                color: 0x000000
+            });
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.name = "initialPlacingText";
+           
+            const center = new THREE.Vector3();
+
+            textMesh.position.set(center.x + 0.6, center.y + 2.30, center.z - 4.39); // Adjust position to place text on the back of the shoe
+
+            textMesh.castShadow = true;
+            textMesh.receiveShadow = true;
+            // Adjust rotation to fit the back of the shoe
+            textMesh.rotation.set(
+                THREE.MathUtils.degToRad(14), // X-axis rotation (tilt forward/backward)
+                THREE.MathUtils.degToRad(180), // Y-axis rotation (facing the back)
+                THREE.MathUtils.degToRad(0) // Z-axis rotation (tilt sideways)
+            );
+            textAreaPart.add(textMesh);
+            console.log(`Added initials "${text}" to sole_bottom`);
+        }
+    );
+}
