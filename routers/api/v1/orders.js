@@ -1,27 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// Dummy data
-const orders = [
-    {
-        id: 1,
-        name: 'John Doe',
-        shoeConfig: {
-            color: 'blue',
-            size: 10
-        },
-        status: 'pending'
-    },
-    {
-        id: 2,
-        name: 'Jane Doe',
-        shoeConfig: {
-            color: 'red',
-            size: 9
-        },
-        status: 'delivered'
-    }
-]
+// Controller
 const ordersController = require('../../../controllers/api/v1/orders');
 
 // get all orders

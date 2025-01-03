@@ -1,30 +1,22 @@
-// Dummy data
-const orders = [
-    {
-        id: 1,
-        name: 'John Doe',
-        shoeConfig: {
-            color: 'blue',
-            size: 10
-        },
-        status: 'pending'
-    },
-    {
-        id: 2,
-        name: 'Jane Doe',
-        shoeConfig: {
-            color: 'red',
-            size: 9
-        },
-        status: 'delivered'
-    }
-]
+const Order = require('../../../models/Order');
 
 // GET
-const getAllOrders = (req, res) => {
-    res.send(orders);
+// /api/v1/orders
+const getAllOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({});
+        res.json({
+            "status": "success",
+            "data": {
+                "orders": orders
+            }
+        });
+    } catch (err) {
+        res.status(500).send('Error getting orders');
+    }
 };
 
+// /api/v1/orders/:id
 const getOrderById = (req, res) => {
     const order = orders.find(order => order.id === parseInt(req.params.id));
     if (!order) {
@@ -34,8 +26,20 @@ const getOrderById = (req, res) => {
 };
 
 // POST
-const createOrder = (req, res) => {
-    res.send("Order created");
+const createOrder = async (req, res) => {
+    const { shoeName, user, shoeConfig } = req.body;
+    const order = new Order({
+        shoeName,
+        user,
+        shoeConfig
+    });
+    try {
+        await order.save();
+        console.log("Order created");
+        res.status(201).send(order);
+    } catch (err) {
+        res.status(500).send('Error creating order');
+    }
 };
 
 // PUT
