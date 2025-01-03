@@ -1,11 +1,20 @@
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
 const ordersRouter = require('./routers/api/v1/orders');
 const usersRouter = require('./routers/api/v1/users');
+const mongoose = require('mongoose');
+
 
 // MongoDB connection
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/threejssneakers');
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB connected successfully'))
+.catch(err => console.error('MongoDB connection error:', err));
+
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
@@ -20,8 +29,7 @@ app.get('/', (req, res) => {
 });
 
 // PORT
-const port = process.env.PORT || 3000;
-// PORT
+const port = process.env.SERVER_PORT || config.server.port;
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
-  });
+});
