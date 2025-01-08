@@ -55,51 +55,9 @@ const environmentMap = textureLoader.load('models/images/enviroment/metal.jpg');
 // Create a material for the sphere with the environment map
 const sphereMaterial = new THREE.MeshBasicMaterial({
     map: environmentMap,
-    color: 0x00ff00, // Green color
+    color: 0x0000ff, // Blue color
     transparent: true,
     opacity: 0.35 // Adjust opacity as needed
-});
-
-// Add smoke to the scene
-const smokeTexture = textureLoader.load('models/images/enviroment/fart07.png');
-const smokeMaterial = new THREE.MeshBasicMaterial({
-    map: smokeTexture,
-    transparent: true,
-    opacity: 0.2,
-    blending: THREE.AdditiveBlending, // Use additive blending to avoid black background
-    depthWrite: false // Disable depth write to avoid depth issues
-});
-const smokeGeometry = new THREE.PlaneGeometry(10, 10);
-
-// Create multiple smoke meshes around the shoe
-const smokeMeshes = [];
-const smokePositions = [{
-        x: 0,
-        y: 0,
-        z: -5
-    },
-    {
-        x: 5,
-        y: 5,
-        z: 5
-    },
-    {
-        x: -5,
-        y: 5,
-        z: 5
-    },
-    {
-        x: -3.5,
-        y: -5,
-        z: 5
-    }
-];
-
-smokePositions.forEach(pos => {
-    const smokeMesh = new THREE.Mesh(smokeGeometry, smokeMaterial);
-    smokeMesh.position.set(pos.x, pos.y, pos.z);
-    scene.add(smokeMesh);
-    smokeMeshes.push(smokeMesh);
 });
 
 // Create the sphere mesh and add it to the scene
@@ -112,20 +70,6 @@ function rotateSphere() {
     requestAnimationFrame(rotateSphere);
 }
 rotateSphere();
-
-// Animate the smoke
-function animateSmoke() {
-    smokeMeshes.forEach(smokeMesh => {
-        smokeMesh.position.y += 0.01; // Adjust the speed and direction as needed
-        if (smokeMesh.position.y > 10) {
-            smokeMesh.position.y = -10; // Reset position if it goes too high
-        }
-        // Make the smoke always face the camera
-        smokeMesh.lookAt(camera.position);
-    });
-    requestAnimationFrame(animateSmoke);
-}
-animateSmoke();
 
 // Handle window resize
 window.addEventListener('resize', updateRendererSize);
@@ -923,47 +867,10 @@ document.getElementById('randomizer-button').addEventListener('click', () => {
     // Highlight the selected color and fabric for the current part
     highlightSelectedColorAndFabric(currentPartName);
 });
-// Function to add initials to the shoe
-function addInitialsTotextArea(text) {
-    const textAreaPart = scene.getObjectByName("sole_bottom");
-    console.log(textAreaPart); // Check if the object is found
 
-    // Remove previous initial placing if it exists
-    const previousInitialPlacing = textAreaPart.getObjectByName("initialPlacingText");
-    if (previousInitialPlacing) {
-        textAreaPart.remove(previousInitialPlacing);
-    }
 
-    const fontLoader = new FontLoader();
-    fontLoader.load(
-        "https://threejs.org/examples/fonts/helvetiker_bold.typeface.json",
-        (font) => {
-            const textGeometry = new TextGeometry(text, {
-                font: font,
-                size: 0.3,
-                height: 0.05,
-                curveSegments: 12
-            });
-            const textMaterial = new THREE.MeshStandardMaterial({
-                color: 0x000000
-            });
-            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-            textMesh.name = "initialPlacingText";
-           
-            const center = new THREE.Vector3();
-
-            textMesh.position.set(center.x + 0.6, center.y + 2.30, center.z - 4.39); // Adjust position to place text on the back of the shoe
-
-            textMesh.castShadow = true;
-            textMesh.receiveShadow = true;
-            // Adjust rotation to fit the back of the shoe
-            textMesh.rotation.set(
-                THREE.MathUtils.degToRad(14), // X-axis rotation (tilt forward/backward)
-                THREE.MathUtils.degToRad(180), // Y-axis rotation (facing the back)
-                THREE.MathUtils.degToRad(0) // Z-axis rotation (tilt sideways)
-            );
-            textAreaPart.add(textMesh);
-            console.log(`Added initials "${text}" to sole_bottom`);
-        }
-    );
-}
+// Add event listener for order button
+const orderButton = document.getElementById('order-button');
+orderButton.addEventListener('click', () => {
+    alert('Order placed');
+});
